@@ -1,0 +1,24 @@
+{
+    "name": "yahia",
+    "age": 22,
+    "grades": [
+        {
+            "subject": "math",
+            "score": 10
+        },
+        {
+            "subject": "natural science",
+            "score": 15
+        },
+        {
+            "subject": "social sciences",
+            "score": 16
+        },
+        {
+            "subject": "physics",
+            "score": 17
+        }
+    ],
+    "is_honors": true,
+    "advisor": null
+}

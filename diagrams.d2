@@ -1,0 +1,114 @@
+Data Types -> Structured Data
+Data Types -> Semi-Structured Data  
+Data Types -> Unstructured Data
+
+# Structured Data
+Structured Data -> Database Table
+
+Database Table: ||sql
+SELECT * FROM users;
+-- Results:
+-- +----+------+-----+------+
+-- | ID | Name | Age | City |
+-- +----+------+-----+------+
+-- |  1 | John |  25 | NYC  |
+-- |  2 | Jane |  30 | LA   |
+-- +----+------+-----+------+
+||
+
+# Semi-Structured Data  
+Semi-Structured Data -> JSON Example :JSON
+JSON Example: ||json
+{
+  "user1": {
+    "name": "John", 
+    "age": 25,
+    "location": "NYC"
+  },
+  "user2": {
+    "name": "Jane", 
+    "city": "LA",
+    "skills": ["Python", "SQL"]
+  }
+}
+||
+
+Semi-Structured Data -> XML Example: XML
+XML Example: ||xml
+<users>
+  <user id="1">
+    <name>John</name>
+    <age>25</age>
+  </user>
+  <user id="2">
+    <name>Jane</name>
+    <city>LA</city>
+  </user>
+</users>
+||
+
+
+Semi-Structured Data -> CSV Example:CSV
+CSV Example: ||csv
+ID,Name,Age,City,Skills
+1,John,25,NYC,
+2,Jane,30,LA,"Python,SQL"
+3,Mike,,Boston,JavaScript
+4,Sarah,28,,"React,Node.js"
+||
+
+# Unstructured Data
+Unstructured Data -> Text Files
+Text Files: ||text
+Hello world! This is some random text content
+with no fixed structure or schema. It could be
+emails, documents, social media posts, logs, etc.
+
+The content is free-form and requires natural
+language processing to extract meaning.
+||
+
+Unstructured Data -> Images
+Images: {
+  label: "🖼️ Images\nJPG, PNG, SVG, GIF\nPixel data, no inherent structure"
+}
+
+Unstructured Data -> Audio
+Audio: {
+  label: "🎵 Audio Files\nMP3, WAV, FLAC\nWaveform data"
+}
+
+Unstructured Data -> Video
+Video: {
+  label: "🎬 Video Files\nMP4, AVI, MOV\nSequential frames + audio"
+}
+
+# Styling
+# Styling
+Structured Data: {
+  style.fill: "#e1f5fe"
+  icon: https://icons.terrastruct.com/tech%2F022-server.svg
+}
+Semi-Structured Data: {
+  style.fill: "#fff3e0"
+  icon: https://icons.terrastruct.com/essentials%2F257-file.svg
+  
+} 
+Unstructured Data  {
+  video : {
+    style.fill: "#fce4ec"
+    icon: https://icons.terrastruct.com/essentials%2F002-video%20player.svg
+  }
+  audio : {
+    style.fill: "#fce4ec"
+    icon: https://icons.terrastruct.com/essentials%2F108-megaphone.svg
+  }
+  image : {
+    style.fill: "#fce4ec"
+    icon: https://icons.terrastruct.com/essentials%2F004-picture.svg
+  }
+  text : {
+    style.fill: "#fce4ec"
+    icon: https://icons.terrastruct.com/aws%2FInternet%20of%20Things%2FAWS-IoT-Analytics_Data-Set_light-bg.svg
+  }
+}

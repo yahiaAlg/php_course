@@ -1,0 +1,99 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+}
+
+/** navigation bar style for nav and ul and li and a elements */
+nav {
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    align-content: space-between;
+    align-items: center;
+}
+
+#logo {
+    margin-left: 5%;
+    margin-right: 50%;
+}
+
+ul {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 20%;
+    margin: 0;
+    padding: 0;
+
+
+}
+
+li {
+    margin-left: 1%;
+
+}
+
+li a {
+    color: #fff;
+    text-decoration: none;
+
+}
+
+li a:hover {
+    color: greenyellow;
+
+}
+
+.content {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+}
+
+main {
+    width: 77%;
+    margin-top: 1%;
+    background-color: #464444;
+    color: #f2f2f2;
+
+}
+
+main p {
+    padding: 1%;
+}
+
+main h1 {
+    text-align: center;
+}
+
+/* contact form styling */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1%;
+    padding: 2%;
+}
+
+
+aside {
+    padding: 1%;
+    margin-top: 1%;
+    width: 20%;
+    background-color: #464444;
+    color: #f2f2f2;
+}
+
+footer {
+    width: 100%;
+    margin-top: 1%;
+    padding: 2%;
+    background-color: #464444;
+    color: #f2f2f2;
+    text-align: center;
+}
+
+footer a {
+    color: yellowgreen;
+    text-decoration: none;
+}
