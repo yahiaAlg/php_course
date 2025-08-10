@@ -1,13 +1,3 @@
-# PHP Fundamentals Tutorial: Advanced Topics for Beginners
-
-## Introduction
-
-Welcome to your journey into PHP's more advanced features! While these topics might seem intimidating at first, they're actually fundamental building blocks that every PHP developer needs to understand. Think of this tutorial as your bridge from basic PHP syntax to practical, real-world programming skills.
-
-Before we dive in, remember that PHP is a server-side scripting language, which means it runs on the web server before the page is sent to your browser. This makes it perfect for handling dynamic content, working with databases, and managing files - all of which we'll explore today.
-
----
-
 ## Chapter 1: PHP Date and Time - Working with Temporal Data
 
 ### Understanding Time in Programming
@@ -111,7 +101,7 @@ if ($timeDifference > 0) {
     $days = floor($timeDifference / (24 * 60 * 60));
     $hours = floor(($timeDifference % (24 * 60 * 60)) / (60 * 60));
     $minutes = floor(($timeDifference % (60 * 60)) / 60);
-    
+
     echo "Time until New Year: {$days} days, {$hours} hours, {$minutes} minutes";
 } else {
     // Event has passed
@@ -123,6 +113,40 @@ if ($timeDifference > 0) {
 This example demonstrates how timestamps make time calculations straightforward - you can subtract one timestamp from another to get the difference in seconds, then convert that to meaningful units.
 
 ---
+
+### strftime(time, now):
+
+The strtotime() function parses an English textual datetime into a Unix timestamp (the number of seconds since January 1 1970 00:00:00 GMT)
+
+```php
+echo(strtotime("now") . "<br>");
+echo(strtotime("3 October 2005") . "<br>");
+echo(strtotime("+5 hours") . "<br>");
+echo(strtotime("+1 week") . "<br>");
+echo(strtotime("+1 week 3 days 7 hours 5 seconds") . "<br>");
+echo(strtotime("next Monday") . "<br>");
+echo(strtotime("last Sunday"));
+
+
+// saturdays of the current month
+
+
+$startdate = strtotime("Saturday");
+$enddate = strtotime("+6 weeks", $startdate);
+
+while ($startdate < $enddate) {
+  echo date("M d", $startdate) . "<br>";
+  $startdate = strtotime("+1 week", $startdate);
+}
+
+
+
+// days till next 4th july
+$d1=strtotime("July 04");
+$d2=ceil(($d1-time())/60/60/24);
+echo "There are " . $d2 ." days until 4th of July.";
+
+```
 
 ## Chapter 2: PHP Include - Building Modular Applications
 
@@ -150,7 +174,7 @@ echo "This will NOT execute if database.php doesn't exist";
 
 The choice between `include` and `require` depends on how critical the file is to your application. If your script can continue running without the file, use `include`. If the file is essential, use `require`.
 
-### The "_once" Variants
+### The "\_once" Variants
 
 The `_once` variants prevent the same file from being included multiple times, which is crucial for preventing function redefinition errors and improving performance.
 
@@ -318,12 +342,12 @@ $filename = 'data.txt';
 
 if (file_exists($filename)) {
     echo "File exists and is accessible";
-    
+
     // Check specific permissions
     if (is_readable($filename)) {
         echo "File is readable";
     }
-    
+
     if (is_writable($filename)) {
         echo "File is writable";
     }
@@ -423,7 +447,7 @@ function writeLogEntry($message) {
     $logFile = 'application.log';
     $timestamp = date('Y-m-d H:i:s');
     $logEntry = "[{$timestamp}] {$message}\n";
-    
+
     $handle = fopen($logFile, 'a'); // 'a' for append mode
     if ($handle) {
         if (fwrite($handle, $logEntry) !== false) {
@@ -460,14 +484,14 @@ if ($_POST['action'] === 'sign' && !empty($_POST['name']) && !empty($_POST['mess
     $name = htmlspecialchars($_POST['name']); // Security: escape HTML
     $message = htmlspecialchars($_POST['message']);
     $timestamp = date('Y-m-d H:i:s');
-    
+
     // Format the entry
     $entry = "---\n";
     $entry .= "Name: {$name}\n";
     $entry .= "Date: {$timestamp}\n";
     $entry .= "Message: {$message}\n";
     $entry .= "---\n\n";
-    
+
     // Append to guestbook file
     if (file_put_contents($guestbookFile, $entry, FILE_APPEND | LOCK_EX)) {
         $success = "Thank you for signing our guestbook!";
@@ -500,15 +524,15 @@ if (file_exists($guestbookFile)) {
 </head>
 <body>
     <h1>Guest Book</h1>
-    
+
     <?php if (isset($success)): ?>
         <p style="color: green;"><?php echo $success; ?></p>
     <?php endif; ?>
-    
+
     <?php if (isset($error)): ?>
         <p style="color: red;"><?php echo $error; ?></p>
     <?php endif; ?>
-    
+
     <form method="post">
         <input type="hidden" name="action" value="sign">
         <p>
@@ -521,7 +545,7 @@ if (file_exists($guestbookFile)) {
             <button type="submit">Sign Guest Book</button>
         </p>
     </form>
-    
+
     <h2>Previous Entries</h2>
     <?php if (!empty($entries)): ?>
         <?php foreach (array_reverse($entries) as $entry): ?>
@@ -551,13 +575,13 @@ $handle = fopen($csvFile, 'r');
 if ($handle) {
     // Read header row
     $headers = fgetcsv($handle);
-    
+
     // Read data rows
     while (($row = fgetcsv($handle)) !== false) {
         $userData = array_combine($headers, $row);
         echo "User: " . $userData['name'] . ", Email: " . $userData['email'] . "\n";
     }
-    
+
     fclose($handle);
 }
 
@@ -571,12 +595,12 @@ $handle = fopen('output.csv', 'w');
 if ($handle) {
     // Write header
     fputcsv($handle, ['Name', 'Email', 'Age']);
-    
+
     // Write data
     foreach ($users as $user) {
         fputcsv($handle, $user);
     }
-    
+
     fclose($handle);
 }
 ?>
@@ -729,19 +753,19 @@ function analyzeTextFile($filename) {
     if (!$handle) {
         return false;
     }
-    
+
     $charCount = 0;
     $wordCount = 0;
     $lineCount = 0;
     $inWord = false;
-    
+
     while (($char = fgetc($handle)) !== false) {
         $charCount++;
-        
+
         if ($char === "\n") {
             $lineCount++;
         }
-        
+
         if (ctype_space($char)) {
             if ($inWord) {
                 $wordCount++;
@@ -751,14 +775,14 @@ function analyzeTextFile($filename) {
             $inWord = true;
         }
     }
-    
+
     // Count the last word if file doesn't end with whitespace
     if ($inWord) {
         $wordCount++;
     }
-    
+
     fclose($handle);
-    
+
     return [
         'characters' => $charCount,
         'words' => $wordCount,
@@ -788,15 +812,15 @@ function processLogFile($filename) {
         echo "Could not open log file";
         return;
     }
-    
+
     $lineNumber = 0;
     $errorCount = 0;
     $warningCount = 0;
-    
+
     while (($line = fgets($handle)) !== false) {
         $lineNumber++;
         $line = trim($line); // Remove whitespace
-        
+
         if (strpos($line, 'ERROR') !== false) {
             $errorCount++;
             echo "Error on line {$lineNumber}: {$line}\n";
@@ -805,9 +829,9 @@ function processLogFile($filename) {
             echo "Warning on line {$lineNumber}: {$line}\n";
         }
     }
-    
+
     fclose($handle);
-    
+
     echo "Summary: {$errorCount} errors, {$warningCount} warnings in {$lineNumber} lines\n";
 }
 
@@ -825,14 +849,14 @@ When dealing with large files or binary data, reading fixed-size blocks can be m
 function copyFileInChunks($source, $destination, $chunkSize = 8192) {
     $sourceHandle = fopen($source, 'rb'); // 'b' for binary mode
     $destHandle = fopen($destination, 'wb');
-    
+
     if (!$sourceHandle || !$destHandle) {
         echo "Could not open files for copying";
         return false;
     }
-    
+
     $totalBytes = 0;
-    
+
     while (!feof($sourceHandle)) {
         $chunk = fread($sourceHandle, $chunkSize);
         if ($chunk !== false) {
@@ -840,10 +864,10 @@ function copyFileInChunks($source, $destination, $chunkSize = 8192) {
             $totalBytes += strlen($chunk);
         }
     }
-    
+
     fclose($sourceHandle);
     fclose($destHandle);
-    
+
     echo "Copied {$totalBytes} bytes successfully\n";
     return true;
 }
@@ -864,26 +888,26 @@ if ($handle) {
     // Read first 10 characters
     $beginning = fread($handle, 10);
     echo "First 10 chars: " . $beginning . "\n";
-    
+
     // Check current position
     $position = ftell($handle);
     echo "Current position: " . $position . "\n";
-    
+
     // Jump to position 50
     fseek($handle, 50);
-    
+
     // Read next 20 characters
     $middle = fread($handle, 20);
     echo "20 chars from position 50: " . $middle . "\n";
-    
+
     // Jump to 100 characters from the end
     fseek($handle, -100, SEEK_END);
     $nearEnd = fread($handle, 50);
     echo "50 chars from near end: " . $nearEnd . "\n";
-    
+
     // Go back to beginning
     rewind($handle);
-    
+
     fclose($handle);
 }
 ?>
@@ -900,31 +924,31 @@ function safeReadFile($filename, $maxSize = 1048576) { // 1MB default limit
     if (!file_exists($filename)) {
         throw new Exception("File does not exist: {$filename}");
     }
-    
+
     // Check if file is readable
     if (!is_readable($filename)) {
         throw new Exception("File is not readable: {$filename}");
     }
-    
+
     // Check file size
     $filesize = filesize($filename);
     if ($filesize > $maxSize) {
         throw new Exception("File too large: {$filesize} bytes (max: {$maxSize})");
     }
-    
+
     // Open file
     $handle = fopen($filename, 'r');
     if (!$handle) {
         throw new Exception("Could not open file: {$filename}");
     }
-    
+
     // Read file content
     $content = fread($handle, $filesize);
     if ($content === false) {
         fclose($handle);
         throw new Exception("Could not read file content: {$filename}");
     }
-    
+
     fclose($handle);
     return $content;
 }
