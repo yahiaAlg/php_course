@@ -187,7 +187,7 @@ function validateBookData($book)
 }
 
 // Test validation
-$testBook = ['title' => 'Test Book', 'author' => 'Test Author', 'price' => 'not-a-number', 'id' => 'abc'];
+$testBook = ['title' => '', 'author' => 'Test Author', 'price' => 'not-a-number', 'id' => 'abc'];
 $errors = validateBookData($testBook);
 
 if (empty($errors)) {

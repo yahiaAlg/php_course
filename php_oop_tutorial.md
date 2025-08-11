@@ -20,12 +20,12 @@ class Car {
     public $color;
     public $brand;
     public $model;
-    
+
     // Methods (what a car can do)
     public function start() {
         return "The car is starting... Engine on!";
     }
-    
+
     public function stop() {
         return "The car has stopped. Engine off!";
     }
@@ -63,7 +63,7 @@ class Car {
     public $brand;
     public $model;
     private $isRunning = false;  // Private property - only accessible within this class
-    
+
     // Constructor method - runs when 'new Car()' is called
     public function __construct($color, $brand, $model) {
         $this->color = $color;    // $this refers to the current object
@@ -71,7 +71,7 @@ class Car {
         $this->model = $model;
         echo "A new {$this->color} {$this->brand} {$this->model} has been created!\n";
     }
-    
+
     public function start() {
         if (!$this->isRunning) {
             $this->isRunning = true;
@@ -79,7 +79,7 @@ class Car {
         }
         return "The car is already running!\n";
     }
-    
+
     public function getCarInfo() {
         return "This is a {$this->color} {$this->brand} {$this->model}\n";
     }
@@ -108,17 +108,17 @@ A destructor is the opposite of a constructor - it runs automatically when an ob
 class DatabaseConnection {
     private $connection;
     private $host;
-    
+
     public function __construct($host) {
         $this->host = $host;
         $this->connection = "Connected to {$host}";
         echo "Database connection established to {$host}\n";
     }
-    
+
     public function query($sql) {
         return "Executing query: {$sql} on {$this->host}\n";
     }
-    
+
     // Destructor - runs when object is destroyed
     public function __destruct() {
         echo "Closing database connection to {$this->host}\n";
@@ -148,13 +148,13 @@ class BankAccount {
     public $accountHolder;      // Anyone can access this
     private $balance;           // Only this class can access this
     protected $accountNumber;   // This class and its subclasses can access this
-    
+
     public function __construct($holder, $initialBalance) {
         $this->accountHolder = $holder;
         $this->balance = $initialBalance;
         $this->accountNumber = $this->generateAccountNumber();
     }
-    
+
     // Public method - anyone can call this
     public function deposit($amount) {
         if ($amount > 0) {
@@ -163,17 +163,17 @@ class BankAccount {
         }
         return "Invalid deposit amount\n";
     }
-    
+
     // Public method to safely get balance
     public function getBalance() {
         return $this->balance;
     }
-    
+
     // Private method - only this class can call this
     private function generateAccountNumber() {
         return "ACC" . rand(100000, 999999);
     }
-    
+
     // Protected method - this class and subclasses can call this
     protected function validateTransaction($amount) {
         return $amount > 0 && $amount <= $this->balance;
@@ -210,17 +210,17 @@ class Vehicle {
     protected $brand;
     protected $model;
     protected $year;
-    
+
     public function __construct($brand, $model, $year) {
         $this->brand = $brand;
         $this->model = $model;
         $this->year = $year;
     }
-    
+
     public function start() {
         return "The {$this->brand} {$this->model} is starting...\n";
     }
-    
+
     public function getInfo() {
         return "{$this->year} {$this->brand} {$this->model}\n";
     }
@@ -229,23 +229,23 @@ class Vehicle {
 // Child class inheriting from Vehicle
 class Car extends Vehicle {
     private $doors;
-    
+
     public function __construct($brand, $model, $year, $doors) {
         // Call parent constructor first
         parent::__construct($brand, $model, $year);
         $this->doors = $doors;
     }
-    
+
     // Override parent method
     public function start() {
         return "Car engine starting... The {$this->brand} {$this->model} is ready to drive!\n";
     }
-    
+
     // Add new method specific to cars
     public function honk() {
         return "Beep beep! The {$this->brand} is honking!\n";
     }
-    
+
     // Override parent method and extend it
     public function getInfo() {
         return parent::getInfo() . "Doors: {$this->doors}\n";
@@ -255,16 +255,16 @@ class Car extends Vehicle {
 // Another child class
 class Motorcycle extends Vehicle {
     private $engineSize;
-    
+
     public function __construct($brand, $model, $year, $engineSize) {
         parent::__construct($brand, $model, $year);
         $this->engineSize = $engineSize;
     }
-    
+
     public function start() {
         return "Motorcycle engine roaring... The {$this->brand} {$this->model} is ready to ride!\n";
     }
-    
+
     public function wheelie() {
         return "The {$this->brand} is doing a wheelie!\n";
     }
@@ -296,19 +296,19 @@ class MathHelper {
     const PI = 3.14159;
     const E = 2.71828;
     const GRAVITY = 9.81;
-    
+
     // You can also have constants with more complex values
     const SUPPORTED_CURRENCIES = ['USD', 'EUR', 'GBP', 'JPY'];
-    
+
     public static function calculateCircleArea($radius) {
         // Access constant using self:: (within the class)
         return self::PI * $radius * $radius;
     }
-    
+
     public static function calculateCircumference($radius) {
         return 2 * self::PI * $radius;
     }
-    
+
     public static function getSupportedCurrencies() {
         return self::SUPPORTED_CURRENCIES;
     }
@@ -343,24 +343,24 @@ Abstract classes are like architectural blueprints that define the structure but
 // Abstract class - cannot be instantiated directly
 abstract class Shape {
     protected $color;
-    
+
     public function __construct($color) {
         $this->color = $color;
     }
-    
+
     // Concrete method - all shapes have this implementation
     public function getColor() {
         return $this->color;
     }
-    
+
     // Abstract method - must be implemented by child classes
     abstract public function calculateArea();
     abstract public function calculatePerimeter();
-    
+
     // Another concrete method that uses abstract methods
     public function getShapeInfo() {
-        return "This is a {$this->color} shape with area: " . 
-               $this->calculateArea() . " and perimeter: " . 
+        return "This is a {$this->color} shape with area: " .
+               $this->calculateArea() . " and perimeter: " .
                $this->calculatePerimeter() . "\n";
     }
 }
@@ -368,17 +368,17 @@ abstract class Shape {
 // Concrete class implementing the abstract class
 class Circle extends Shape {
     private $radius;
-    
+
     public function __construct($color, $radius) {
         parent::__construct($color);
         $this->radius = $radius;
     }
-    
+
     // Must implement abstract methods
     public function calculateArea() {
         return 3.14159 * $this->radius * $this->radius;
     }
-    
+
     public function calculatePerimeter() {
         return 2 * 3.14159 * $this->radius;
     }
@@ -387,18 +387,18 @@ class Circle extends Shape {
 class Rectangle extends Shape {
     private $width;
     private $height;
-    
+
     public function __construct($color, $width, $height) {
         parent::__construct($color);
         $this->width = $width;
         $this->height = $height;
     }
-    
+
     // Must implement abstract methods
     public function calculateArea() {
         return $this->width * $this->height;
     }
-    
+
     public function calculatePerimeter() {
         return 2 * ($this->width + $this->height);
     }
@@ -439,27 +439,27 @@ interface LoggableInterface {
 // Concrete class implementing the payment interface
 class PayPalProcessor implements PaymentProcessorInterface, LoggableInterface {
     private $apiKey;
-    
+
     public function __construct($apiKey) {
         $this->apiKey = $apiKey;
     }
-    
+
     public function processPayment($amount) {
         // PayPal-specific payment processing
         $transactionId = "PP" . rand(100000, 999999);
         $this->log("Processing PayPal payment of ${amount}");
         return "PayPal payment of ${amount} processed. Transaction ID: {$transactionId}\n";
     }
-    
+
     public function refundPayment($transactionId) {
         $this->log("Refunding PayPal transaction: {$transactionId}");
         return "PayPal refund processed for transaction: {$transactionId}\n";
     }
-    
+
     public function getTransactionStatus($transactionId) {
         return "PayPal transaction {$transactionId} status: Completed\n";
     }
-    
+
     public function log($message) {
         echo "[PayPal Log] " . date('Y-m-d H:i:s') . " - {$message}\n";
     }
@@ -467,27 +467,27 @@ class PayPalProcessor implements PaymentProcessorInterface, LoggableInterface {
 
 class StripeProcessor implements PaymentProcessorInterface, LoggableInterface {
     private $secretKey;
-    
+
     public function __construct($secretKey) {
         $this->secretKey = $secretKey;
     }
-    
+
     public function processPayment($amount) {
         // Stripe-specific payment processing
         $transactionId = "ST" . rand(100000, 999999);
         $this->log("Processing Stripe payment of ${amount}");
         return "Stripe payment of ${amount} processed. Transaction ID: {$transactionId}\n";
     }
-    
+
     public function refundPayment($transactionId) {
         $this->log("Refunding Stripe transaction: {$transactionId}");
         return "Stripe refund processed for transaction: {$transactionId}\n";
     }
-    
+
     public function getTransactionStatus($transactionId) {
         return "Stripe transaction {$transactionId} status: Successful\n";
     }
-    
+
     public function log($message) {
         echo "[Stripe Log] " . date('Y-m-d H:i:s') . " - {$message}\n";
     }
@@ -523,19 +523,19 @@ Traits are like mix-ins that allow you to share code between classes without usi
 // Trait for logging functionality
 trait LoggingTrait {
     private $logFile = 'app.log';
-    
+
     public function log($message, $level = 'INFO') {
         $timestamp = date('Y-m-d H:i:s');
         $logEntry = "[{$timestamp}] [{$level}] {$message}\n";
-        
+
         // In a real application, you'd write to a file or database
         echo $logEntry;
     }
-    
+
     public function logError($message) {
         $this->log($message, 'ERROR');
     }
-    
+
     public function logDebug($message) {
         $this->log($message, 'DEBUG');
     }
@@ -545,19 +545,19 @@ trait LoggingTrait {
 trait TimestampTrait {
     private $createdAt;
     private $updatedAt;
-    
+
     public function setCreatedAt() {
         $this->createdAt = date('Y-m-d H:i:s');
     }
-    
+
     public function setUpdatedAt() {
         $this->updatedAt = date('Y-m-d H:i:s');
     }
-    
+
     public function getCreatedAt() {
         return $this->createdAt;
     }
-    
+
     public function getUpdatedAt() {
         return $this->updatedAt;
     }
@@ -566,24 +566,24 @@ trait TimestampTrait {
 // Class using multiple traits
 class User {
     use LoggingTrait, TimestampTrait;
-    
+
     private $name;
     private $email;
-    
+
     public function __construct($name, $email) {
         $this->name = $name;
         $this->email = $email;
         $this->setCreatedAt();
         $this->log("User created: {$name} ({$email})");
     }
-    
+
     public function updateEmail($newEmail) {
         $oldEmail = $this->email;
         $this->email = $newEmail;
         $this->setUpdatedAt();
         $this->log("Email updated from {$oldEmail} to {$newEmail}");
     }
-    
+
     public function getName() {
         return $this->name;
     }
@@ -592,17 +592,17 @@ class User {
 // Another class using the same traits
 class Product {
     use LoggingTrait, TimestampTrait;
-    
+
     private $name;
     private $price;
-    
+
     public function __construct($name, $price) {
         $this->name = $name;
         $this->price = $price;
         $this->setCreatedAt();
         $this->log("Product created: {$name} - ${price}");
     }
-    
+
     public function updatePrice($newPrice) {
         $oldPrice = $this->price;
         $this->price = $newPrice;
@@ -634,28 +634,28 @@ Static methods and properties belong to the class itself rather than to specific
 class MathUtilities {
     // Static property - shared by all instances
     private static $calculationCount = 0;
-    
+
     // Static method - can be called without creating an object
     public static function add($a, $b) {
         self::$calculationCount++;
         return $a + $b;
     }
-    
+
     public static function multiply($a, $b) {
         self::$calculationCount++;
         return $a * $b;
     }
-    
+
     public static function power($base, $exponent) {
         self::$calculationCount++;
         return pow($base, $exponent);
     }
-    
+
     // Static method to get the count
     public static function getCalculationCount() {
         return self::$calculationCount;
     }
-    
+
     // Static method to reset the count
     public static function resetCalculationCount() {
         self::$calculationCount = 0;
@@ -665,13 +665,13 @@ class MathUtilities {
 class DatabaseConnection {
     private static $instance = null;
     private $connection;
-    
+
     // Private constructor prevents direct instantiation
     private function __construct() {
         $this->connection = "Database connection established";
         echo $this->connection . "\n";
     }
-    
+
     // Static method to get single instance (Singleton pattern)
     public static function getInstance() {
         if (self::$instance === null) {
@@ -679,7 +679,7 @@ class DatabaseConnection {
         }
         return self::$instance;
     }
-    
+
     public function query($sql) {
         return "Executing: {$sql}";
     }
@@ -752,12 +752,12 @@ namespace App\Models\User;
 class Profile {
     private $firstName;
     private $lastName;
-    
+
     public function __construct($firstName, $lastName) {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
     }
-    
+
     public function getFullName() {
         return $this->firstName . ' ' . $this->lastName;
     }
@@ -783,117 +783,6 @@ echo $controller->createProfile("John", "Doe") . "\n";
 
 Namespaces become increasingly important as your applications grow. They help you organize code logically and avoid conflicts when using third-party libraries.
 
-## Iterables: Making Objects Loop-Friendly
-
-The Iterator interface allows you to make your objects work with foreach loops, giving you control over how the iteration happens.
-
-```php
-<?php
-// Custom collection class that implements Iterator
-class BookCollection implements Iterator {
-    private $books = [];
-    private $position = 0;
-    
-    public function addBook($title, $author) {
-        $this->books[] = ['title' => $title, 'author' => $author];
-    }
-    
-    // Iterator interface methods
-    public function current() {
-        return $this->books[$this->position];
-    }
-    
-    public function key() {
-        return $this->position;
-    }
-    
-    public function next() {
-        $this->position++;
-    }
-    
-    public function rewind() {
-        $this->position = 0;
-    }
-    
-    public function valid() {
-        return isset($this->books[$this->position]);
-    }
-    
-    // Additional useful methods
-    public function count() {
-        return count($this->books);
-    }
-    
-    public function isEmpty() {
-        return empty($this->books);
-    }
-}
-
-// Using the iterable collection
-$library = new BookCollection();
-$library->addBook("The Great Gatsby", "F. Scott Fitzgerald");
-$library->addBook("To Kill a Mockingbird", "Harper Lee");
-$library->addBook("1984", "George Orwell");
-
-// Now we can use foreach with our custom object
-echo "Library contains " . $library->count() . " books:\n";
-
-foreach ($library as $index => $book) {
-    echo ($index + 1) . ". {$book['title']} by {$book['author']}\n";
-}
-
-// Another example with more complex iteration
-class NumberRange implements Iterator {
-    private $start;
-    private $end;
-    private $current;
-    
-    public function __construct($start, $end) {
-        $this->start = $start;
-        $this->end = $end;
-        $this->current = $start;
-    }
-    
-    public function current() {
-        return $this->current;
-    }
-    
-    public function key() {
-        return $this->current;
-    }
-    
-    public function next() {
-        $this->current++;
-    }
-    
-    public function rewind() {
-        $this->current = $this->start;
-    }
-    
-    public function valid() {
-        return $this->current <= $this->end;
-    }
-}
-
-// Using the number range iterator
-$range = new NumberRange(1, 5);
-
-echo "Numbers from 1 to 5:\n";
-foreach ($range as $number) {
-    echo $number . " ";
-}
-echo "\n";
-
-// You can also use it multiple times
-echo "Squares of numbers from 1 to 5:\n";
-foreach ($range as $number) {
-    echo $number . "² = " . ($number * $number) . "\n";
-}
-?>
-```
-
-Implementing the Iterator interface makes your objects feel like native PHP arrays when used in loops, providing a clean and intuitive way to work with collections of data.
-
 ## Putting It All Together: A Complete Example
 
 Let's create a comprehensive example that demonstrates many of these concepts working together in a realistic scenario.
@@ -916,49 +805,49 @@ abstract class LibraryItem implements BorrowableInterface {
     protected $isAvailable = true;
     protected $borrowedBy = null;
     protected $borrowDate = null;
-    
+
     public function __construct($id, $title) {
         $this->id = $id;
         $this->title = $title;
     }
-    
+
     public function borrow($memberId) {
         if (!$this->isAvailable) {
             return "Item '{$this->title}' is already borrowed";
         }
-        
+
         $this->isAvailable = false;
         $this->borrowedBy = $memberId;
         $this->borrowDate = date('Y-m-d');
-        
+
         return "Item '{$this->title}' borrowed by member {$memberId}";
     }
-    
+
     public function returnItem() {
         if ($this->isAvailable) {
             return "Item '{$this->title}' was not borrowed";
         }
-        
+
         $this->isAvailable = true;
         $previousBorrower = $this->borrowedBy;
         $this->borrowedBy = null;
         $this->borrowDate = null;
-        
+
         return "Item '{$this->title}' returned by member {$previousBorrower}";
     }
-    
+
     public function isAvailable() {
         return $this->isAvailable;
     }
-    
+
     public function getTitle() {
         return $this->title;
     }
-    
+
     public function getId() {
         return $this->id;
     }
-    
+
     // Abstract method that concrete classes must implement
     abstract public function getItemType();
     abstract public function getDescription();
@@ -969,22 +858,22 @@ class Book extends LibraryItem {
     private $author;
     private $isbn;
     private $pages;
-    
+
     public function __construct($id, $title, $author, $isbn, $pages) {
         parent::__construct($id, $title);
         $this->author = $author;
         $this->isbn = $isbn;
         $this->pages = $pages;
     }
-    
+
     public function getItemType() {
         return "Book";
     }
-    
+
     public function getDescription() {
         return "'{$this->title}' by {$this->author} (ISBN: {$this->isbn}, {$this->pages} pages)";
     }
-    
+
     public function getAuthor() {
         return $this->author;
     }
@@ -995,18 +884,18 @@ class DVD extends LibraryItem {
     private $director;
     private $duration;
     private $genre;
-    
+
     public function __construct($id, $title, $director, $duration, $genre) {
         parent::__construct($id, $title);
         $this->director = $director;
         $this->duration = $duration;
         $this->genre = $genre;
     }
-    
+
     public function getItemType() {
         return "DVD";
     }
-    
+
     public function getDescription() {
         return "'{$this->title}' directed by {$this->director} ({$this->duration} min, {$this->genre})";
     }
@@ -1015,14 +904,14 @@ class DVD extends LibraryItem {
 // Trait for logging functionality
 trait LoggingTrait {
     private static $logs = [];
-    
+
     protected function log($message) {
         $timestamp = date('Y-m-d H:i:s');
         $logEntry = "[{$timestamp}] {$message}";
         self::$logs[] = $logEntry;
         echo $logEntry . "\n";
     }
-    
+
     public static function getLogs() {
         return self::$logs;
     }
@@ -1031,53 +920,53 @@ trait LoggingTrait {
 // Library management system
 class Library implements Iterator {
     use LoggingTrait;
-    
+
     private $items = [];
     private $members = [];
     private $position = 0;
-    
+
     // Constants for library rules
     const MAX_BORROW_DAYS = 14;
     const LATE_FEE_PER_DAY = 0.50;
-    
+
     public function addItem(LibraryItem $item) {
         $this->items[$item->getId()] = $item;
         $this->log("Added {$item->getItemType()}: {$item->getDescription()}");
     }
-    
+
     public function addMember($memberId, $name) {
         $this->members[$memberId] = $name;
         $this->log("New member registered: {$name} (ID: {$memberId})");
     }
-    
+
     public function borrowItem($itemId, $memberId) {
         if (!isset($this->items[$itemId])) {
             return "Item with ID {$itemId} not found";
         }
-        
+
         if (!isset($this->members[$memberId])) {
             return "Member with ID {$memberId} not found";
         }
-        
+
         $item = $this->items[$itemId];
         $result = $item->borrow($memberId);
         $this->log("Borrow attempt: {$result}");
-        
+
         return $result;
     }
-    
+
     public function returnItem($itemId) {
         if (!isset($this->items[$itemId])) {
             return "Item with ID {$itemId} not found";
         }
-        
+
         $item = $this->items[$itemId];
         $result = $item->returnItem();
         $this->log("Return attempt: {$result}");
-        
+
         return $result;
     }
-    
+
     public function searchByTitle($title) {
         $results = [];
         foreach ($this->items as $item) {
@@ -1087,7 +976,7 @@ class Library implements Iterator {
         }
         return $results;
     }
-    
+
     public function getAvailableItems() {
         $available = [];
         foreach ($this->items as $item) {
@@ -1097,32 +986,32 @@ class Library implements Iterator {
         }
         return $available;
     }
-    
+
     public static function calculateLateFee($daysLate) {
         return $daysLate * self::LATE_FEE_PER_DAY;
     }
-    
+
     // Iterator interface implementation
     public function current() {
         return current($this->items);
     }
-    
+
     public function key() {
         return key($this->items);
     }
-    
+
     public function next() {
         return next($this->items);
     }
-    
+
     public function rewind() {
         return reset($this->items);
     }
-    
+
     public function valid() {
         return key($this->items) !== null;
     }
-    
+
     public function count() {
         return count($this->items);
     }

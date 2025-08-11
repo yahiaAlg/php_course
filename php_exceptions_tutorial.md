@@ -1,4 +1,4 @@
-# Simple PHP Exceptions Guide - No OOP
+# Simple PHP Exceptions and Error handling Guide
 
 ## The Critical Problem: When Simple Errors Kill Your Entire Program
 
@@ -24,6 +24,7 @@ echo "Profile system ready!\n";
 ```
 
 **Output:**
+
 ```
 Starting user profile system...
 Loading user data...
@@ -49,7 +50,7 @@ try {
     }
     $profilePicture = file_get_contents('profile_pictures/john.jpg');
     echo "Profile picture loaded successfully!\n";
-    
+
 } catch (Exception $e) {
     // Handle the error gracefully
     echo "Notice: " . $e->getMessage() . " Using default picture.\n";
@@ -65,6 +66,7 @@ echo "Profile system ready!\n";
 ```
 
 **Output:**
+
 ```
 Starting user profile system...
 Loading user data...
@@ -81,6 +83,7 @@ Profile system ready!
 ---
 
 ## Table of Contents
+
 1. [What Are Exceptions?](#what-are-exceptions)
 2. [The Problem Without Exceptions](#the-problem-without-exceptions)
 3. [Understanding Try-Catch-Finally Blocks](#understanding-try-catch-finally-blocks)
@@ -116,10 +119,10 @@ function divide($a, $b) {
 try {
     $result = divide(10, 2);
     echo "10 ÷ 2 = $result\n";
-    
+
     $result2 = divide(10, 0); // This will cause an exception
     echo "This line won't run\n";
-    
+
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage() . "\n";
     echo "But the program keeps running!\n";
@@ -130,6 +133,7 @@ echo "Program continues here!\n";
 ```
 
 **Output:**
+
 ```
 10 ÷ 2 = 5
 Error: Cannot divide by zero!
@@ -184,6 +188,7 @@ try {
 ```
 
 **Output:**
+
 ```
 Age Error: Age cannot be negative! You entered: -5
 ```
@@ -205,11 +210,11 @@ Think of these blocks like a safety system:
 try {
     // Code that might fail goes here
     echo "Trying something risky...\n";
-    
+
 } catch (Exception $e) {
     // Handle the error here
     echo "Oops! " . $e->getMessage() . "\n";
-    
+
 } finally {
     // This ALWAYS runs, even if there's an error
     echo "Cleaning up...\n";
@@ -223,15 +228,15 @@ try {
 <?php
 function processNumber($number) {
     echo "Starting to process number: $number\n";
-    
+
     if (!is_numeric($number)) {
         throw new Exception("'$number' is not a valid number!");
     }
-    
+
     if ($number < 0) {
         throw new Exception("Number must be positive!");
     }
-    
+
     return $number * 2;
 }
 
@@ -241,10 +246,10 @@ try {
     $result = processNumber(5);
     echo "Result: $result\n";
     echo "Processing completed!\n";
-    
+
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage() . "\n";
-    
+
 } finally {
     echo "Test 1 finished.\n\n";
 }
@@ -255,10 +260,10 @@ try {
     $result = processNumber("hello");
     echo "Result: $result\n";
     echo "This won't print!\n";
-    
+
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage() . "\n";
-    
+
 } finally {
     echo "Test 2 finished.\n\n";
 }
@@ -268,6 +273,7 @@ echo "Both tests are done. Program still running!\n";
 ```
 
 **Output:**
+
 ```
 === Test 1: Valid Number ===
 Starting to process number: 5
@@ -299,11 +305,11 @@ function checkPassword($password) {
     if (empty($password)) {
         throw new Exception("Password cannot be empty!");
     }
-    
+
     if (strlen($password) < 6) {
         throw new Exception("Password must be at least 6 characters long!");
     }
-    
+
     return "Password is good!";
 }
 
@@ -325,7 +331,7 @@ function calculateSquare($number) {
     if (!is_numeric($number)) {
         throw new InvalidArgumentException("I need a number, but you gave me: " . gettype($number));
     }
-    
+
     return $number * $number;
 }
 
@@ -336,7 +342,7 @@ foreach ($testInputs as $input) {
     try {
         $result = calculateSquare($input);
         echo "Square of $input = $result\n";
-        
+
     } catch (InvalidArgumentException $e) {
         echo "Bad Input: " . $e->getMessage() . "\n";
     }
@@ -345,6 +351,7 @@ foreach ($testInputs as $input) {
 ```
 
 **Output:**
+
 ```
 Square of 5 = 25
 Bad Input: I need a number, but you gave me: string
@@ -366,11 +373,11 @@ function getMonth($monthNumber) {
         7 => "July", 8 => "August", 9 => "September",
         10 => "October", 11 => "November", 12 => "December"
     ];
-    
+
     if ($monthNumber < 1 || $monthNumber > 12) {
         throw new OutOfBoundsException("Month number must be 1-12, but you gave me: $monthNumber");
     }
-    
+
     return $months[$monthNumber];
 }
 
@@ -397,19 +404,19 @@ function readFile($filename) {
     if (!file_exists($filename)) {
         throw new RuntimeException("File '$filename' does not exist!");
     }
-    
+
     $content = file_get_contents($filename);
     if ($content === false) {
         throw new RuntimeException("Could not read file '$filename'! Check permissions.");
     }
-    
+
     return $content;
 }
 
 try {
     $content = readFile("missing.txt");
     echo "File content: $content\n";
-    
+
 } catch (RuntimeException $e) {
     echo "File Problem: " . $e->getMessage() . "\n";
     echo "Using default content instead.\n";
@@ -432,11 +439,11 @@ function validateEmail($email) {
     if (empty($email)) {
         throw new Exception("EMAIL_REQUIRED: Please enter an email address");
     }
-    
+
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         throw new Exception("EMAIL_INVALID: '$email' is not a valid email format");
     }
-    
+
     return $email;
 }
 
@@ -444,19 +451,19 @@ function validateAge($age) {
     if (empty($age)) {
         throw new Exception("AGE_REQUIRED: Please enter your age");
     }
-    
+
     if (!is_numeric($age)) {
         throw new Exception("AGE_INVALID: Age must be a number");
     }
-    
+
     if ($age < 13) {
         throw new Exception("AGE_TOO_YOUNG: You must be at least 13 years old");
     }
-    
+
     if ($age > 120) {
         throw new Exception("AGE_TOO_OLD: Please enter a realistic age");
     }
-    
+
     return (int)$age;
 }
 
@@ -470,18 +477,18 @@ $users = [
 
 foreach ($users as $index => $user) {
     echo "\n--- Testing User " . ($index + 1) . " ---\n";
-    
+
     try {
         $validEmail = validateEmail($user['email']);
         $validAge = validateAge($user['age']);
-        
+
         echo "✓ User is valid!\n";
         echo "  Email: $validEmail\n";
         echo "  Age: $validAge\n";
-        
+
     } catch (Exception $e) {
         $message = $e->getMessage();
-        
+
         if (strpos($message, 'EMAIL_') === 0) {
             echo "❌ Email Error: " . substr($message, strpos($message, ':') + 2) . "\n";
         } elseif (strpos($message, 'AGE_') === 0) {
@@ -503,17 +510,17 @@ function processOrder($items, $payment) {
     if (empty($items)) {
         throw new InvalidArgumentException("Order must have at least one item!");
     }
-    
+
     if (!is_array($items)) {
         throw new InvalidArgumentException("Items must be a list!");
     }
-    
+
     // Check payment method
     $validPayments = ['cash', 'card', 'paypal'];
     if (!in_array($payment, $validPayments)) {
         throw new OutOfBoundsException("Payment method '$payment' is not supported!");
     }
-    
+
     // Calculate total
     $total = 0;
     foreach ($items as $item) {
@@ -522,7 +529,7 @@ function processOrder($items, $payment) {
         }
         $total += $item;
     }
-    
+
     return "Order processed: " . count($items) . " items, total: $" . number_format($total, 2) . ", payment: $payment";
 }
 
@@ -537,20 +544,20 @@ $orders = [
 
 foreach ($orders as $index => $order) {
     echo "\n--- Order " . ($index + 1) . " ---\n";
-    
+
     try {
         $result = processOrder($order[0], $order[1]);
         echo "✓ $result\n";
-        
+
     } catch (InvalidArgumentException $e) {
         echo "❌ Input Error: " . $e->getMessage() . "\n";
-        
+
     } catch (OutOfBoundsException $e) {
         echo "❌ Option Error: " . $e->getMessage() . "\n";
-        
+
     } catch (RuntimeException $e) {
         echo "❌ Processing Error: " . $e->getMessage() . "\n";
-        
+
     } catch (Exception $e) {
         echo "❌ Unexpected Error: " . $e->getMessage() . "\n";
     }
@@ -571,28 +578,28 @@ function simpleCalculator($num1, $num2, $operation) {
     if (!is_numeric($num1)) {
         throw new InvalidArgumentException("First number '$num1' is not valid!");
     }
-    
+
     if (!is_numeric($num2)) {
         throw new InvalidArgumentException("Second number '$num2' is not valid!");
     }
-    
+
     // Perform calculation
     switch ($operation) {
         case '+':
             return $num1 + $num2;
-            
+
         case '-':
             return $num1 - $num2;
-            
+
         case '*':
             return $num1 * $num2;
-            
+
         case '/':
             if ($num2 == 0) {
                 throw new RuntimeException("Cannot divide by zero!");
             }
             return $num1 / $num2;
-            
+
         default:
             throw new OutOfBoundsException("Operation '$operation' is not supported! Use: +, -, *, /");
     }
@@ -609,17 +616,17 @@ $calculations = [
 
 foreach ($calculations as $index => $calc) {
     echo "\nCalculation " . ($index + 1) . ": {$calc[0]} {$calc[2]} {$calc[1]}\n";
-    
+
     try {
         $result = simpleCalculator($calc[0], $calc[1], $calc[2]);
         echo "Result: $result\n";
-        
+
     } catch (InvalidArgumentException $e) {
         echo "Input Error: " . $e->getMessage() . "\n";
-        
+
     } catch (RuntimeException $e) {
         echo "Math Error: " . $e->getMessage() . "\n";
-        
+
     } catch (OutOfBoundsException $e) {
         echo "Operation Error: " . $e->getMessage() . "\n";
     }
@@ -637,27 +644,27 @@ function safeReadFile($filename) {
         if (!file_exists($filename)) {
             throw new Exception("File '$filename' not found!");
         }
-        
+
         // Check if we can read it
         if (!is_readable($filename)) {
             throw new Exception("File '$filename' cannot be read!");
         }
-        
+
         // Check file size (max 1MB for this example)
         $size = filesize($filename);
         if ($size > 1024 * 1024) {
             throw new Exception("File '$filename' is too large (over 1MB)!");
         }
-        
+
         // Read the file
         $content = file_get_contents($filename);
         if ($content === false) {
             throw new RuntimeException("Failed to read file '$filename'!");
         }
-        
+
         echo "✓ Successfully read file '$filename' (" . strlen($content) . " characters)\n";
         return $content;
-        
+
     } catch (Exception $e) {
         echo "❌ File Error: " . $e->getMessage() . "\n";
         echo "→ Using default content instead.\n";
@@ -715,13 +722,13 @@ function processUserInput($input) {
         if (empty($input)) {
             throw new Exception("Input cannot be empty!");
         }
-        
+
         if (strlen($input) > 100) {
             throw new Exception("Input too long!");
         }
-        
+
         return "Processed: " . htmlspecialchars($input);
-        
+
     } catch (Exception $e) {
         echo "Input error: " . $e->getMessage() . "\n";
         return "Processed: [invalid input]";
@@ -735,7 +742,7 @@ function safeDivision($a, $b) {
             throw new RuntimeException("Cannot divide by zero!");
         }
         return $a / $b;
-        
+
     } catch (RuntimeException $e) {
         echo "Math error: " . $e->getMessage() . "\n";
         return 0; // Return safe default
@@ -766,32 +773,32 @@ echo "\nProgram completed successfully!\n";
 <?php
 function processDataWithCleanup($data) {
     $tempFile = 'temp_processing.txt';
-    
+
     try {
         echo "Starting data processing...\n";
-        
+
         // Create temporary file
         file_put_contents($tempFile, $data);
         echo "Temporary file created.\n";
-        
+
         // Simulate processing that might fail
         if (empty($data)) {
             throw new Exception("Cannot process empty data!");
         }
-        
+
         if (strlen($data) < 5) {
             throw new Exception("Data too short to process!");
         }
-        
+
         // Process the data
         $result = "PROCESSED: " . strtoupper($data);
         echo "Processing successful!\n";
         return $result;
-        
+
     } catch (Exception $e) {
         echo "Processing failed: " . $e->getMessage() . "\n";
         return "PROCESSING FAILED";
-        
+
     } finally {
         // This ALWAYS runs, even if there was an error
         if (file_exists($tempFile)) {
@@ -832,6 +839,7 @@ echo "\nAll tests completed!\n";
 2. **Use try-catch for risky code** - File operations, user input, calculations, etc.
 
 3. **Different exception types for different problems:**
+
    - `Exception` - General problems
    - `InvalidArgumentException` - Wrong input type
    - `OutOfBoundsException` - Accessing something that doesn't exist
@@ -844,15 +852,16 @@ echo "\nAll tests completed!\n";
 6. **Don't ignore exceptions** - Always handle them or log them
 
 **Simple Template to Remember:**
+
 ```php
 <?php
 try {
     // Risky code here
-    
+
 } catch (Exception $e) {
     // Handle the error
     echo "Error: " . $e->getMessage();
-    
+
 } finally {
     // Cleanup code (optional)
     echo "Always runs";
