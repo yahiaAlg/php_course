@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Design Showcase</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-size: 1.2em;
+        }
+
+        .tables-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .table-wrapper {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .table-wrapper:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .table-header {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            font-size: 1.3em;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+
+        th {
+            background: linear-gradient(45deg, #34495e, #2c3e50);
+            color: white;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #ecf0f1;
+            transition: background-color 0.2s ease;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Customer grouping colors */
+        .customer-1 {
+            background-color: #ffeaa7 !important;
+        }
+
+        .customer-2 {
+            background-color: #fab1a0 !important;
+        }
+
+        .customer-3 {
+            background-color: #fd79a8 !important;
+        }
+
+        .customer-4 {
+            background-color: #fdcb6e !important;
+        }
+
+        .customer-5 {
+            background-color: #e17055 !important;
+        }
+
+        .customer-6 {
+            background-color: #81ecec !important;
+        }
+
+        .customer-7 {
+            background-color: #74b9ff !important;
+        }
+
+        .customer-8 {
+            background-color: #a29bfe !important;
+        }
+
+        .customer-9 {
+            background-color: #6c5ce7 !important;
+        }
+
+        .customer-10 {
+            background-color: #00b894 !important;
+        }
+
+        /* Product grouping colors */
+        .product-sn001 {
+            background-color: #ff7675 !important;
+        }
+
+        .product-sn002 {
+            background-color: #fd79a8 !important;
+        }
+
+        .product-sn003 {
+            background-color: #fdcb6e !important;
+        }
+
+        .product-sn004 {
+            background-color: #e17055 !important;
+        }
+
+        .product-sn005 {
+            background-color: #00b894 !important;
+        }
+
+        .product-sn006 {
+            background-color: #00cec9 !important;
+        }
+
+        .product-sn007 {
+            background-color: #74b9ff !important;
+        }
+
+        .product-sn008 {
+            background-color: #a29bfe !important;
+        }
+
+        .product-sn009 {
+            background-color: #6c5ce7 !important;
+        }
+
+        .product-sn010 {
+            background-color: #ffeaa7 !important;
+        }
+
+        .product-sn011 {
+            background-color: #55a3ff !important;
+        }
+
+        .product-sn012 {
+            background-color: #26de81 !important;
+        }
+
+        .pk {
+            background-color: #ffeb3b !important;
+            font-weight: bold;
+            border-left: 4px solid #fbc02d;
+            position: relative;
+        }
+
+        .pk::before {
+            content: "🔑";
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8em;
+        }
+
+        .pk {
+            padding-left: 25px !important;
+        }
+
+        .fk {
+            background-color: #81c784 !important;
+            font-weight: bold;
+            border-left: 4px solid #4caf50;
+            position: relative;
+        }
+
+        .fk::before {
+            content: "🔗";
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8em;
+        }
+
+        .fk {
+            padding-left: 25px !important;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(45deg, #ecf0f1, #bdc3c7);
+            border-radius: 12px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            padding: 10px 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .legend-pk {
+            border-left: 4px solid #fbc02d;
+            background-color: #fff9c4;
+        }
+
+        .legend-fk {
+            border-left: 4px solid #4caf50;
+            background-color: #e8f5e8;
+        }
+
+        .relationships {
+            margin-top: 40px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            border-radius: 12px;
+            border: 2px solid #ddd;
+        }
+
+        .relationships h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .relationship-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .relationship-list li {
+            background: white;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Database Design Showcase</h1>
+        <p class="subtitle">E-commerce Order Management System</p>
+
+        <div class="tables-container">
+            <!-- Customer Table -->
+            <div class="table-wrapper">
+                <div class="table-header">Customer Table</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="pk">1</td>
+                            <td>John Smith</td>
+                            <td>+1-555-0101</td>
+                            <td>john.smith@email.com</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">2</td>
+                            <td>Sarah Johnson</td>
+                            <td>+1-555-0102</td>
+                            <td>sarah.j@email.com</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">3</td>
+                            <td>Mike Davis</td>
+                            <td>+1-555-0103</td>
+                            <td>mike.davis@email.com</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">4</td>
+                            <td>Emily Chen</td>
+                            <td>+1-555-0104</td>
+                            <td>emily.chen@email.com</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">5</td>
+                            <td>Robert Wilson</td>
+                            <td>+1-555-0105</td>
+                            <td>r.wilson@email.com</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">6</td>
+                            <td>Lisa Anderson</td>
+                            <td>+1-555-0106</td>
+                            <td>lisa.anderson@email.com</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">7</td>
+                            <td>David Brown</td>
+                            <td>+1-555-0107</td>
+                            <td>d.brown@email.com</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">8</td>
+                            <td>Maria Garcia</td>
+                            <td>+1-555-0108</td>
+                            <td>maria.garcia@email.com</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">9</td>
+                            <td>James Taylor</td>
+                            <td>+1-555-0109</td>
+                            <td>james.taylor@email.com</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">10</td>
+                            <td>Anna Martinez</td>
+                            <td>+1-555-0110</td>
+                            <td>anna.martinez@email.com</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">11</td>
+                            <td>Thomas Lee</td>
+                            <td>+1-555-0111</td>
+                            <td>thomas.lee@email.com</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">12</td>
+                            <td>Jennifer White</td>
+                            <td>+1-555-0112</td>
+                            <td>jen.white@email.com</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Product Table -->
+            <div class="table-wrapper">
+                <div class="table-header">Product Table</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Serial Number</th>
+                            <th>Name</th>
+                            <th>Reference</th>
+                            <th>Price</th>
+                            <th>Discount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="pk">SN001</td>
+                            <td>Wireless Headphones</td>
+                            <td>WH-2024</td>
+                            <td>$199.99</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">SN002</td>
+                            <td>Smartphone</td>
+                            <td>SP-PRO</td>
+                            <td>$799.99</td>
+                            <td>No</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">SN003</td>
+                            <td>Laptop Computer</td>
+                            <td>LP-15</td>
+                            <td>$1299.99</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">SN004</td>
+                            <td>Gaming Mouse</td>
+                            <td>GM-RGB</td>
+                            <td>$89.99</td>
+                            <td>No</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">SN005</td>
+                            <td>Bluetooth Speaker</td>
+                            <td>BS-360</td>
+                            <td>$149.99</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">SN006</td>
+                            <td>Tablet</td>
+                            <td>TB-10</td>
+                            <td>$399.99</td>
+                            <td>No</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">SN007</td>
+                            <td>Smart Watch</td>
+                            <td>SW-FIT</td>
+                            <td>$299.99</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">SN008</td>
+                            <td>USB Cable</td>
+                            <td>UC-C</td>
+                            <td>$19.99</td>
+                            <td>No</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">SN009</td>
+                            <td>Wireless Charger</td>
+                            <td>WC-FAST</td>
+                            <td>$59.99</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">SN010</td>
+                            <td>External Hard Drive</td>
+                            <td>HD-1TB</td>
+                            <td>$129.99</td>
+                            <td>No</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">SN011</td>
+                            <td>Mechanical Keyboard</td>
+                            <td>MK-RGB</td>
+                            <td>$159.99</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td class="pk">SN012</td>
+                            <td>Monitor</td>
+                            <td>MON-27</td>
+                            <td>$349.99</td>
+                            <td>No</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tables-container">
+            <!-- Order Table -->
+            <div class="table-wrapper">
+                <div class="table-header">Order Table</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order Number</th>
+                            <th>Customer ID</th>
+                            <th>Address</th>
+                            <th>Ship Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="customer-1">
+                            <td class="pk">ORD-001</td>
+                            <td class="fk">1</td>
+                            <td>123 Oak St, NYC</td>
+                            <td>2024-08-15</td>
+                        </tr>
+                        <tr class="customer-1">
+                            <td class="pk">ORD-004</td>
+                            <td class="fk">1</td>
+                            <td>123 Oak St, NYC</td>
+                            <td>2024-08-18</td>
+                        </tr>
+                        <tr class="customer-1">
+                            <td class="pk">ORD-013</td>
+                            <td class="fk">1</td>
+                            <td>123 Oak St, NYC</td>
+                            <td>2024-08-25</td>
+                        </tr>
+                        <tr class="customer-2">
+                            <td class="pk">ORD-002</td>
+                            <td class="fk">2</td>
+                            <td>456 Pine Ave, LA</td>
+                            <td>2024-08-16</td>
+                        </tr>
+                        <tr class="customer-2">
+                            <td class="pk">ORD-008</td>
+                            <td class="fk">2</td>
+                            <td>456 Pine Ave, LA</td>
+                            <td>2024-08-20</td>
+                        </tr>
+                        <tr class="customer-2">
+                            <td class="pk">ORD-014</td>
+                            <td class="fk">2</td>
+                            <td>456 Pine Ave, LA</td>
+                            <td>2024-08-26</td>
+                        </tr>
+                        <tr class="customer-3">
+                            <td class="pk">ORD-003</td>
+                            <td class="fk">3</td>
+                            <td>789 Elm Rd, Chicago</td>
+                            <td>2024-08-17</td>
+                        </tr>
+                        <tr class="customer-3">
+                            <td class="pk">ORD-015</td>
+                            <td class="fk">3</td>
+                            <td>789 Elm Rd, Chicago</td>
+                            <td>2024-08-23</td>
+                        </tr>
+                        <tr class="customer-4">
+                            <td class="pk">ORD-005</td>
+                            <td class="fk">4</td>
+                            <td>321 Maple Dr, Miami</td>
+                            <td>2024-08-18</td>
+                        </tr>
+                        <tr class="customer-4">
+                            <td class="pk">ORD-016</td>
+                            <td class="fk">4</td>
+                            <td>321 Maple Dr, Miami</td>
+                            <td>2024-08-24</td>
+                        </tr>
+                        <tr class="customer-5">
+                            <td class="pk">ORD-006</td>
+                            <td class="fk">5</td>
+                            <td>654 Cedar Ln, Dallas</td>
+                            <td>2024-08-19</td>
+                        </tr>
+                        <tr class="customer-5">
+                            <td class="pk">ORD-017</td>
+                            <td class="fk">5</td>
+                            <td>654 Cedar Ln, Dallas</td>
+                            <td>2024-08-27</td>
+                        </tr>
+                        <tr class="customer-6">
+                            <td class="pk">ORD-007</td>
+                            <td class="fk">6</td>
+                            <td>987 Birch St, Seattle</td>
+                            <td>2024-08-19</td>
+                        </tr>
+                        <tr class="customer-6">
+                            <td class="pk">ORD-018</td>
+                            <td class="fk">6</td>
+                            <td>987 Birch St, Seattle</td>
+                            <td>2024-08-28</td>
+                        </tr>
+                        <tr class="customer-7">
+                            <td class="pk">ORD-009</td>
+                            <td class="fk">7</td>
+                            <td>147 Walnut Ave, Boston</td>
+                            <td>2024-08-20</td>
+                        </tr>
+                        <tr class="customer-7">
+                            <td class="pk">ORD-019</td>
+                            <td class="fk">7</td>
+                            <td>147 Walnut Ave, Boston</td>
+                            <td>2024-08-29</td>
+                        </tr>
+                        <tr class="customer-8">
+                            <td class="pk">ORD-010</td>
+                            <td class="fk">8</td>
+                            <td>258 Cherry St, Denver</td>
+                            <td>2024-08-21</td>
+                        </tr>
+                        <tr class="customer-8">
+                            <td class="pk">ORD-020</td>
+                            <td class="fk">8</td>
+                            <td>258 Cherry St, Denver</td>
+                            <td>2024-08-30</td>
+                        </tr>
+                        <tr class="customer-9">
+                            <td class="pk">ORD-011</td>
+                            <td class="fk">9</td>
+                            <td>369 Ash Blvd, Phoenix</td>
+                            <td>2024-08-21</td>
+                        </tr>
+                        <tr class="customer-9">
+                            <td class="pk">ORD-021</td>
+                            <td class="fk">9</td>
+                            <td>369 Ash Blvd, Phoenix</td>
+                            <td>2024-08-31</td>
+                        </tr>
+                        <tr class="customer-10">
+                            <td class="pk">ORD-012</td>
+                            <td class="fk">10</td>
+                            <td>741 Spruce Way, Portland</td>
+                            <td>2024-08-22</td>
+                        </tr>
+                        <tr class="customer-10">
+                            <td class="pk">ORD-022</td>
+                            <td class="fk">10</td>
+                            <td>741 Spruce Way, Portland</td>
+                            <td>2024-09-01</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Order Item Table -->
+            <div class="table-wrapper">
+                <div class="table-header">Order Item Table</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item ID</th>
+                            <th>Order ID</th>
+                            <th>Product ID</th>
+                            <th>Quantity</th>
+                            <th>Add Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="product-sn001">
+                            <td class="pk">1</td>
+                            <td class="fk">ORD-001</td>
+                            <td class="fk">SN001</td>
+                            <td>2</td>
+                            <td>2024-08-15 10:30</td>
+                        </tr>
+                        <tr class="product-sn001">
+                            <td class="pk">13</td>
+                            <td class="fk">ORD-008</td>
+                            <td class="fk">SN001</td>
+                            <td>1</td>
+                            <td>2024-08-20 12:00</td>
+                        </tr>
+                        <tr class="product-sn001">
+                            <td class="pk">30</td>
+                            <td class="fk">ORD-019</td>
+                            <td class="fk">SN001</td>
+                            <td>3</td>
+                            <td>2024-08-29 15:30</td>
+                        </tr>
+                        <tr class="product-sn008">
+                            <td class="pk">2</td>
+                            <td class="fk">ORD-001</td>
+                            <td class="fk">SN008</td>
+                            <td>1</td>
+                            <td>2024-08-15 10:32</td>
+                        </tr>
+                        <tr class="product-sn008">
+                            <td class="pk">25</td>
+                            <td class="fk">ORD-016</td>
+                            <td class="fk">SN008</td>
+                            <td>2</td>
+                            <td>2024-08-24 11:15</td>
+                        </tr>
+                        <tr class="product-sn008">
+                            <td class="pk">32</td>
+                            <td class="fk">ORD-021</td>
+                            <td class="fk">SN008</td>
+                            <td>1</td>
+                            <td>2024-08-31 09:45</td>
+                        </tr>
+                        <tr class="product-sn002">
+                            <td class="pk">3</td>
+                            <td class="fk">ORD-002</td>
+                            <td class="fk">SN002</td>
+                            <td>1</td>
+                            <td>2024-08-16 14:15</td>
+                        </tr>
+                        <tr class="product-sn002">
+                            <td class="pk">15</td>
+                            <td class="fk">ORD-010</td>
+                            <td class="fk">SN002</td>
+                            <td>1</td>
+                            <td>2024-08-21 10:45</td>
+                        </tr>
+                        <tr class="product-sn002">
+                            <td class="pk">28</td>
+                            <td class="fk">ORD-018</td>
+                            <td class="fk">SN002</td>
+                            <td>2</td>
+                            <td>2024-08-28 16:20</td>
+                        </tr>
+                        <tr class="product-sn009">
+                            <td class="pk">4</td>
+                            <td class="fk">ORD-002</td>
+                            <td class="fk">SN009</td>
+                            <td>1</td>
+                            <td>2024-08-16 14:18</td>
+                        </tr>
+                        <tr class="product-sn009">
+                            <td class="pk">26</td>
+                            <td class="fk">ORD-017</td>
+                            <td class="fk">SN009</td>
+                            <td>1</td>
+                            <td>2024-08-27 13:30</td>
+                        </tr>
+                        <tr class="product-sn009">
+                            <td class="pk">34</td>
+                            <td class="fk">ORD-022</td>
+                            <td class="fk">SN009</td>
+                            <td>3</td>
+                            <td>2024-09-01 14:45</td>
+                        </tr>
+                        <tr class="product-sn003">
+                            <td class="pk">5</td>
+                            <td class="fk">ORD-003</td>
+                            <td class="fk">SN003</td>
+                            <td>1</td>
+                            <td>2024-08-17 09:45</td>
+                        </tr>
+                        <tr class="product-sn003">
+                            <td class="pk">21</td>
+                            <td class="fk">ORD-013</td>
+                            <td class="fk">SN003</td>
+                            <td>1</td>
+                            <td>2024-08-25 10:15</td>
+                        </tr>
+                        <tr class="product-sn003">
+                            <td class="pk">33</td>
+                            <td class="fk">ORD-021</td>
+                            <td class="fk">SN003</td>
+                            <td>2</td>
+                            <td>2024-08-31 11:00</td>
+                        </tr>
+                        <tr class="product-sn004">
+                            <td class="pk">6</td>
+                            <td class="fk">ORD-003</td>
+                            <td class="fk">SN004</td>
+                            <td>1</td>
+                            <td>2024-08-17 09:47</td>
+                        </tr>
+                        <tr class="product-sn004">
+                            <td class="pk">23</td>
+                            <td class="fk">ORD-014</td>
+                            <td class="fk">SN004</td>
+                            <td>2</td>
+                            <td>2024-08-26 14:30</td>
+                        </tr>
+                        <tr class="product-sn004">
+                            <td class="pk">29</td>
+                            <td class="fk">ORD-019</td>
+                            <td class="fk">SN004</td>
+                            <td>1</td>
+                            <td>2024-08-29 16:45</td>
+                        </tr>
+                        <tr class="product-sn005">
+                            <td class="pk">7</td>
+                            <td class="fk">ORD-004</td>
+                            <td class="fk">SN005</td>
+                            <td>2</td>
+                            <td>2024-08-18 16:20</td>
+                        </tr>
+                        <tr class="product-sn005">
+                            <td class="pk">14</td>
+                            <td class="fk">ORD-009</td>
+                            <td class="fk">SN005</td>
+                            <td>3</td>
+                            <td>2024-08-20 17:15</td>
+                        </tr>
+                        <tr class="product-sn005">
+                            <td class="pk">31</td>
+                            <td class="fk">ORD-020</td>
+                            <td class="fk">SN005</td>
+                            <td>1</td>
+                            <td>2024-08-30 12:30</td>
+                        </tr>
+                        <tr class="product-sn006">
+                            <td class="pk">8</td>
+                            <td class="fk">ORD-005</td>
+                            <td class="fk">SN006</td>
+                            <td>1</td>
+                            <td>2024-08-18 11:10</td>
+                        </tr>
+                        <tr class="product-sn006">
+                            <td class="pk">22</td>
+                            <td class="fk">ORD-013</td>
+                            <td class="fk">SN006</td>
+                            <td>2</td>
+                            <td>2024-08-25 11:45</td>
+                        </tr>
+                        <tr class="product-sn006">
+                            <td class="pk">27</td>
+                            <td class="fk">ORD-017</td>
+                            <td class="fk">SN006</td>
+                            <td>1</td>
+                            <td>2024-08-27 15:20</td>
+                        </tr>
+                        <tr class="product-sn007">
+                            <td class="pk">9</td>
+                            <td class="fk">ORD-005</td>
+                            <td class="fk">SN007</td>
+                            <td>1</td>
+                            <td>2024-08-18 11:15</td>
+                        </tr>
+                        <tr class="product-sn007">
+                            <td class="pk">24</td>
+                            <td class="fk">ORD-015</td>
+                            <td class="fk">SN007</td>
+                            <td>1</td>
+                            <td>2024-08-23 13:20</td>
+                        </tr>
+                        <tr class="product-sn007">
+                            <td class="pk">35</td>
+                            <td class="fk">ORD-022</td>
+                            <td class="fk">SN007</td>
+                            <td>2</td>
+                            <td>2024-09-01 16:10</td>
+                        </tr>
+                        <tr class="product-sn010">
+                            <td class="pk">10</td>
+                            <td class="fk">ORD-006</td>
+                            <td class="fk">SN010</td>
+                            <td>1</td>
+                            <td>2024-08-19 13:30</td>
+                        </tr>
+                        <tr class="product-sn010">
+                            <td class="pk">16</td>
+                            <td class="fk">ORD-011</td>
+                            <td class="fk">SN010</td>
+                            <td>1</td>
+                            <td>2024-08-21 14:20</td>
+                        </tr>
+                        <tr class="product-sn011">
+                            <td class="pk">11</td>
+                            <td class="fk">ORD-007</td>
+                            <td class="fk">SN011</td>
+                            <td>1</td>
+                            <td>2024-08-19 15:45</td>
+                        </tr>
+                        <tr class="product-sn011">
+                            <td class="pk">17</td>
+                            <td class="fk">ORD-011</td>
+                            <td class="fk">SN011</td>
+                            <td>2</td>
+                            <td>2024-08-21 14:45</td>
+                        </tr>
+                        <tr class="product-sn012">
+                            <td class="pk">12</td>
+                            <td class="fk">ORD-007</td>
+                            <td class="fk">SN012</td>
+                            <td>1</td>
+                            <td>2024-08-19 15:50</td>
+                        </tr>
+                        <tr class="product-sn012">
+                            <td class="pk">18</td>
+                            <td class="fk">ORD-012</td>
+                            <td class="fk">SN012</td>
+                            <td>1</td>
+                            <td>2024-08-22 16:30</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item legend-pk">
+                <span>🔑</span>
+                <span>Primary Key (PK)</span>
+            </div>
+            <div class="legend-item legend-fk">
+                <span>🔗</span>
+                <span>Foreign Key (FK)</span>
+            </div>
+        </div>
+
+        <div class="relationships">
+            <h2>Database Relationships</h2>
+            <ul class="relationship-list">
+                <li><strong>Customer → Order:</strong> One-to-Many (One customer can have multiple orders)</li>
+                <li><strong>Order → Order Item:</strong> One-to-Many (One order can contain multiple items)</li>
+                <li><strong>Product → Order Item:</strong> One-to-Many (One product can appear in multiple order items)
+                </li>
+                <li><strong>Customer → Order Item:</strong> Many-to-Many (through Order table as junction)</li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>

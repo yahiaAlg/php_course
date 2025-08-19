@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL JOIN Operations Explained with Examples</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #2c3e50;
+        }
+
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            border-left: 5px solid #3498db;
+            padding-left: 10px;
+            margin-top: 30px;
+        }
+
+        .query-box {
+            background-color: #f0f0f0;
+            border-left: 4px solid #e74c3c;
+            padding: 10px 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            color: #c0392b;
+            overflow-x: auto;
+        }
+
+        .table-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 20px 0;
+            gap: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background: white;
+            margin: 10px 0;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .result-table {
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .highlight {
+            background-color: #fffb96;
+            font-weight: bold;
+        }
+
+        .null {
+            color: #95a5a6;
+            font-style: italic;
+        }
+
+        .explanation {
+            background-color: #e8f4fc;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+
+        .example-title {
+            color: #e74c3c;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .schema-diagram {
+            text-align: center;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>SQL JOIN Operations Explained with Shop Inventory Examples</h1>
+
+    <div class="schema-diagram">
+        <p><strong>Database Schema:</strong><br>
+            CUSTOMER (customer_id, name, contact_email) ↔ CUSTOMER_ORDER (order_id, customer_id, order_date,
+            order_total) ↔ ORDER_ITEM (order_item_id, order_id, product_id, quantity)<br>
+            PRODUCT (product_id, name, sku, price) ↔ SUPPLIER (supplier_id, name, contact_person)
+        </p>
+    </div>
+
+    <!-- INNER JOIN -->
+    <h2>1. INNER JOIN</h2>
+    <div class="explanation">
+        <p><strong>INNER JOIN</strong> returns only the rows where there is a match in <strong>both</strong> tables.</p>
+        <p><strong>Use case:</strong> Find orders with customer details, or products with supplier info.</p>
+    </div>
+
+    <div class="query-box">
+        -- Example 1: Get all orders with customer names<br>
+        SELECT co.order_id, c.name, co.order_date, co.order_total<br>
+        FROM CUSTOMER_ORDER co<br>
+        INNER JOIN CUSTOMER c ON co.customer_id = c.customer_id;
+    </div>
+
+    <div class="table-container">
+        <table>
+            <caption>CUSTOMER_ORDER</caption>
+            <tr>
+                <th>order_id</th>
+                <th>customer_id</th>
+                <th>order_date</th>
+                <th>order_total</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td class="highlight">1</td>
+                <td>2025-08-18</td>
+                <td>51.98</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td class="highlight">2</td>
+                <td>2025-08-17</td>
+                <td>35.99</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td class="highlight">1</td>
+                <td>2025-08-16</td>
+                <td>25.99</td>
+            </tr>
+        </table>
+
+        <table>
+            <caption>CUSTOMER</caption>
+            <tr>
+                <th>customer_id</th>
+                <th>name</th>
+                <th>contact_email</th>
+            </tr>
+            <tr>
+                <td class="highlight">1</td>
+                <td>Alice Smith</td>
+                <td>alice@example.com</td>
+            </tr>
+            <tr>
+                <td class="highlight">2</td>
+                <td>Bob Johnson</td>
+                <td>bob@example.com</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Charlie Brown</td>
+                <td>charlie@example.com</td>
+            </tr>
+        </table>
+    </div>
+
+    <table class="result-table">
+        <caption>Result: Orders with Customer Names</caption>
+        <tr>
+            <th>order_id</th>
+            <th>name</th>
+            <th>order_date</th>
+            <th>order_total</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Alice Smith</td>
+            <td>2025-08-18</td>
+            <td>51.98</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Bob Johnson</td>
+            <td>2025-08-17</td>
+            <td>35.99</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Alice Smith</td>
+            <td>2025-08-16</td>
+            <td>25.99</td>
+        </tr>
+    </table>
+
+    <div class="query-box">
+        -- Example 2: Get all order items with product details<br>
+        SELECT oi.order_item_id, p.name AS product_name, oi.quantity, oi.unit_price<br>
+        FROM ORDER_ITEM oi<br>
+        INNER JOIN PRODUCT p ON oi.product_id = p.product_id<br>
+        WHERE oi.order_id = 1;
+    </div>
+
+    <!-- LEFT JOIN -->
+    <h2>2. LEFT JOIN (LEFT OUTER JOIN)</h2>
+    <div class="explanation">
+        <p><strong>LEFT JOIN</strong> returns all rows from the <strong>left table</strong>, and matched rows from the
+            right table. If no match, the right table columns contain <code>NULL</code>.</p>
+        <p><strong>Use case:</strong> Find all customers, including those who haven't placed orders yet.</p>
+    </div>
+
+    <div class="query-box">
+        -- Example: Get all customers, including those without orders<br>
+        SELECT c.customer_id, c.name, co.order_id, co.order_date<br>
+        FROM CUSTOMER c<br>
+        LEFT JOIN CUSTOMER_ORDER co ON c.customer_id = co.customer_id;
+    </div>
+
+    <table class="result-table">
+        <caption>Result: All Customers with Their Orders (if any)</caption>
+        <tr>
+            <th>customer_id</th>
+            <th>name</th>
+            <th>order_id</th>
+            <th>order_date</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Alice Smith</td>
+            <td>1</td>
+            <td>2025-08-18</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Alice Smith</td>
+            <td>3</td>
+            <td>2025-08-16</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Bob Johnson</td>
+            <td>2</td>
+            <td>2025-08-17</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Charlie Brown</td>
+            <td class="null">NULL</td>
+            <td class="null">NULL</td>
+        </tr>
+    </table>
+
+    <!-- RIGHT JOIN -->
+    <h2>3. RIGHT JOIN (RIGHT OUTER JOIN)</h2>
+    <div class="explanation">
+        <p><strong>RIGHT JOIN</strong> returns all rows from the <strong>right table</strong>, and matched rows from the
+            left table. If no match, the left table columns contain <code>NULL</code>.</p>
+        <p><strong>Use case:</strong> Find all orders, including those without a customer (rare in this schema).</p>
+    </div>
+
+    <div class="query-box">
+        -- Example: Get all orders, including those without a customer<br>
+        SELECT co.order_id, c.name, co.order_date<br>
+        FROM CUSTOMER_ORDER co<br>
+        RIGHT JOIN CUSTOMER c ON co.customer_id = c.customer_id;
+    </div>
+
+    <table class="result-table">
+        <caption>Result: All Customers with Their Orders (if any)</caption>
+        <tr>
+            <th>order_id</th>
+            <th>name</th>
+            <th>order_date</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Alice Smith</td>
+            <td>2025-08-18</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Bob Johnson</td>
+            <td>2025-08-17</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Alice Smith</td>
+            <td>2025-08-16</td>
+        </tr>
+    </table>
+
+    <!-- FULL JOIN -->
+    <h2>4. FULL JOIN (FULL OUTER JOIN)</h2>
+    <div class="explanation">
+        <p><strong>FULL JOIN</strong> returns all rows when there is a match in <strong>either</strong> table. If no
+            match, the missing side contains <code>NULL</code>.</p>
+        <p><strong>Note:</strong> MariaDB doesn't support FULL JOIN directly. Use UNION of LEFT and RIGHT JOINs.</p>
+        <p><strong>Use case:</strong> Find all customers and all orders, with NULLs where no match exists.</p>
+    </div>
+
+    <div class="query-box">
+        -- Example: Emulate FULL JOIN in MariaDB<br>
+        SELECT c.customer_id, c.name, co.order_id, co.order_date<br>
+        FROM CUSTOMER c<br>
+        LEFT JOIN CUSTOMER_ORDER co ON c.customer_id = co.customer_id<br>
+        UNION<br>
+        SELECT c.customer_id, c.name, co.order_id, co.order_date<br>
+        FROM CUSTOMER c<br>
+        RIGHT JOIN CUSTOMER_ORDER co ON c.customer_id = co.customer_id;
+    </div>
+
+    <table class="result-table">
+        <caption>Result: All Customers and All Orders</caption>
+        <tr>
+            <th>customer_id</th>
+            <th>name</th>
+            <th>order_id</th>
+            <th>order_date</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Alice Smith</td>
+            <td>1</td>
+            <td>2025-08-18</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Alice Smith</td>
+            <td>3</td>
+            <td>2025-08-16</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Bob Johnson</td>
+            <td>2</td>
+            <td>2025-08-17</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Charlie Brown</td>
+            <td class="null">NULL</td>
+            <td class="null">NULL</td>
+        </tr>
+    </table>
+
+    <!-- CROSS JOIN -->
+    <h2>5. CROSS JOIN</h2>
+    <div class="explanation">
+        <p><strong>CROSS JOIN</strong> returns the <strong>Cartesian product</strong> of both tables (all possible
+            combinations).</p>
+        <p><strong>Use case:</strong> Rarely used in practice, but can be used to combine every product with every
+            supplier for analysis.</p>
+    </div>
+
+    <div class="query-box">
+        -- Example: Combine every customer with every product<br>
+        SELECT c.name, p.name AS product_name<br>
+        FROM CUSTOMER c<br>
+        CROSS JOIN PRODUCT p<br>
+        LIMIT 5; -- Limit for demo
+    </div>
+
+    <table class="result-table">
+        <caption>Result: First 5 Rows of Customer-Product Combinations</caption>
+        <tr>
+            <th>customer_name</th>
+            <th>product_name</th>
+        </tr>
+        <tr>
+            <td>Alice Smith</td>
+            <td>Wireless Mouse</td>
+        </tr>
+        <tr>
+            <td>Alice Smith</td>
+            <td>Keyboard</td>
+        </tr>
+        <tr>
+            <td>Alice Smith</td>
+            <td>Monitor</td>
+        </tr>
+        <tr>
+            <td>Bob Johnson</td>
+            <td>Wireless Mouse</td>
+        </tr>
+        <tr>
+            <td>Bob Johnson</td>
+            <td>Keyboard</td>
+        </tr>
+    </table>
+
+    <!-- Self-Join -->
+    <h2>6. Self-Join</h2>
+    <div class="explanation">
+        <p><strong>Self-Join</strong> joins a table to itself. Useful for comparing rows within the same table.</p>
+        <p><strong>Use case:</strong> Find products in the same category, or compare sales between different periods.
+        </p>
+    </div>
+
+    <div class="query-box">
+        -- Example: Find products in the same category as 'Wireless Mouse'<br>
+        SELECT p2.name<br>
+        FROM PRODUCT p1<br>
+        JOIN PRODUCT p2 ON p1.category_id = p2.category_id<br>
+        WHERE p1.name = 'Wireless Mouse' AND p1.product_id != p2.product_id;
+    </div>
+
+    <!-- Multi-Table JOIN -->
+    <h2>7. Multi-Table JOIN</h2>
+    <div class="explanation">
+        <p>Join <strong>three or more tables</strong> to get comprehensive results.</p>
+        <p><strong>Use case:</strong> Get order details with customer, product, and supplier info.</p>
+    </div>
+
+    <div class="query-box">
+        -- Example: Get order details with customer, product, and supplier info<br>
+        SELECT c.name AS customer, p.name AS product, s.name AS supplier, oi.quantity, oi.unit_price<br>
+        FROM ORDER_ITEM oi<br>
+        JOIN PRODUCT p ON oi.product_id = p.product_id<br>
+        JOIN SUPPLIER s ON p.supplier_id = s.supplier_id<br>
+        JOIN CUSTOMER_ORDER co ON oi.order_id = co.order_id<br>
+        JOIN CUSTOMER c ON co.customer_id = c.customer_id<br>
+        WHERE co.order_id = 1;
+    </div>
+
+    <table class="result-table">
+        <caption>Result: Order #1 Details</caption>
+        <tr>
+            <th>customer</th>
+            <th>product</th>
+            <th>supplier</th>
+            <th>quantity</th>
+            <th>unit_price</th>
+        </tr>
+        <tr>
+            <td>Alice Smith</td>
+            <td>Wireless Mouse</td>
+            <td>TechSupplies Inc.</td>
+            <td>2</td>
+            <td>25.99</td>
+        </tr>
+    </table>
+
+    <!-- JOIN with Aggregation -->
+    <h2>8. JOIN with Aggregation</h2>
+    <div class="explanation">
+        <p>Combine JOINs with <code>GROUP BY</code> and aggregate functions like <code>SUM</code>, <code>COUNT</code>,
+            or <code>AVG</code>.</p>
+        <p><strong>Use case:</strong> Calculate total sales per customer or product.</p>
+    </div>
+
+    <div class="query-box">
+        -- Example: Total sales per customer<br>
+        SELECT c.name, SUM(oi.quantity * oi.unit_price) AS total_sales<br>
+        FROM CUSTOMER c<br>
+        JOIN CUSTOMER_ORDER co ON c.customer_id = co.customer_id<br>
+        JOIN ORDER_ITEM oi ON co.order_id = oi.order_id<br>
+        GROUP BY c.customer_id;
+    </div>
+
+    <table class="result-table">
+        <caption>Result: Total Sales per Customer</caption>
+        <tr>
+            <th>customer_name</th>
+            <th>total_sales</th>
+        </tr>
+        <tr>
+            <td>Alice Smith</td>
+            <td>77.97</td>
+        </tr>
+        <tr>
+            <td>Bob Johnson</td>
+            <td>35.99</td>
+        </tr>
+    </table>
+</body>
+
+</html>
