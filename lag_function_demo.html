@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL LAG Function Demo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .sql-query {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 30px;
+            font-size: 16px;
+            border-left: 4px solid #4299e1;
+        }
+
+        .tables-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .table-section {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .table-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2d3748;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 12px 8px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #e6fffa;
+            transform: scale(1.02);
+            transition: all 0.2s ease;
+        }
+
+        .price {
+            font-weight: bold;
+            color: #38a169;
+        }
+
+        .lag-price {
+            font-weight: bold;
+            color: #e53e3e;
+        }
+
+        .null-value {
+            color: #a0aec0;
+            font-style: italic;
+        }
+
+        .explanation {
+            background: #e6fffa;
+            border: 2px solid #38b2ac;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .explanation h3 {
+            color: #2c7a7b;
+            margin-top: 0;
+        }
+
+        .highlight {
+            background: #fed7d7;
+            padding: 2px 4px;
+            border-radius: 3px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .arrow {
+            font-size: 2em;
+            color: #4299e1;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .tables-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            table {
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 8px 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SQL LAG Function Demonstration</h1>
+        <p class="subtitle">Understanding LAG(price, 1) OVER (ORDER BY created_at)</p>
+        
+        <div class="sql-query">
+            SELECT product_id, created_at, price, 
+                   LAG(price, 1) OVER (ORDER BY created_at) AS previous_price
+            FROM products 
+            ORDER BY created_at;
+        </div>
+
+        <div class="tables-container">
+            <div class="table-section">
+                <div class="table-title">📊 Original Data</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product ID</th>
+                            <th>Created At</th>
+                            <th>Price ($)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="originalTable">
+                        <tr>
+                            <td>101</td>
+                            <td>2024-01-01</td>
+                            <td class="price">29.99</td>
+                        </tr>
+                        <tr>
+                            <td>102</td>
+                            <td>2024-01-02</td>
+                            <td class="price">45.50</td>
+                        </tr>
+                        <tr>
+                            <td>103</td>
+                            <td>2024-01-03</td>
+                            <td class="price">32.75</td>
+                        </tr>
+                        <tr>
+                            <td>104</td>
+                            <td>2024-01-04</td>
+                            <td class="price">58.20</td>
+                        </tr>
+                        <tr>
+                            <td>105</td>
+                            <td>2024-01-05</td>
+                            <td class="price">41.00</td>
+                        </tr>
+                        <tr>
+                            <td>106</td>
+                            <td>2024-01-06</td>
+                            <td class="price">67.99</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-section">
+                <div class="table-title">🔄 With LAG Function</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product ID</th>
+                            <th>Created At</th>
+                            <th>Price ($)</th>
+                            <th>Previous Price ($)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lagTable">
+                        <tr>
+                            <td>101</td>
+                            <td>2024-01-01</td>
+                            <td class="price">29.99</td>
+                            <td class="null-value">NULL</td>
+                        </tr>
+                        <tr>
+                            <td>102</td>
+                            <td>2024-01-02</td>
+                            <td class="price">45.50</td>
+                            <td class="lag-price">29.99</td>
+                        </tr>
+                        <tr>
+                            <td>103</td>
+                            <td>2024-01-03</td>
+                            <td class="price">32.75</td>
+                            <td class="lag-price">45.50</td>
+                        </tr>
+                        <tr>
+                            <td>104</td>
+                            <td>2024-01-04</td>
+                            <td class="price">58.20</td>
+                            <td class="lag-price">32.75</td>
+                        </tr>
+                        <tr>
+                            <td>105</td>
+                            <td>2024-01-05</td>
+                            <td class="price">41.00</td>
+                            <td class="lag-price">58.20</td>
+                        </tr>
+                        <tr>
+                            <td>106</td>
+                            <td>2024-01-06</td>
+                            <td class="price">67.99</td>
+                            <td class="lag-price">41.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="explanation">
+            <h3>🎯 How LAG Function Works:</h3>
+            <p><strong>LAG(price, 1)</strong> looks at the previous row (1 row back) in the ordered dataset and retrieves the price value.</p>
+            
+            <ul>
+                <li><strong>First Row:</strong> Returns <span class="null-value">NULL</span> because there's no previous row</li>
+                <li><strong>Second Row:</strong> Returns the price from the first row (<span class="lag-price">29.99</span>)</li>
+                <li><strong>Third Row:</strong> Returns the price from the second row (<span class="lag-price">45.50</span>)</li>
+                <li><strong>And so on...</strong> Each row gets the price from the chronologically previous entry</li>
+            </ul>
+
+            <h3>💡 Common Use Cases:</h3>
+            <ul>
+                <li><strong>Price Change Analysis:</strong> Compare current price vs previous price</li>
+                <li><strong>Trend Detection:</strong> Identify increasing/decreasing patterns</li>
+                <li><strong>Performance Metrics:</strong> Calculate period-over-period changes</li>
+                <li><strong>Time Series Analysis:</strong> Analyze sequential data points</li>
+            </ul>
+
+            <h3>🔧 Syntax Breakdown:</h3>
+            <p><code>LAG(column, offset) OVER (ORDER BY sort_column)</code></p>
+            <ul>
+                <li><strong>column:</strong> The column whose previous value you want</li>
+                <li><strong>offset:</strong> How many rows back to look (1 = previous row)</li>
+                <li><strong>ORDER BY:</strong> Defines the sequence for "previous"</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Add interactive hover effects
+        document.addEventListener('DOMContentLoaded', function() {
+            const originalRows = document.querySelectorAll('#originalTable tr');
+            const lagRows = document.querySelectorAll('#lagTable tr');
+            
+            originalRows.forEach((row, index) => {
+                row.addEventListener('mouseenter', function() {
+                    if (lagRows[index]) {
+                        lagRows[index].style.background = '#bee3f8';
+                        lagRows[index].style.transform = 'scale(1.02)';
+                    }
+                });
+                
+                row.addEventListener('mouseleave', function() {
+                    if (lagRows[index]) {
+                        lagRows[index].style.background = '';
+                        lagRows[index].style.transform = '';
+                    }
+                });
+            });
+            
+            lagRows.forEach((row, index) => {
+                row.addEventListener('mouseenter', function() {
+                    if (originalRows[index]) {
+                        originalRows[index].style.background = '#bee3f8';
+                        originalRows[index].style.transform = 'scale(1.02)';
+                    }
+                });
+                
+                row.addEventListener('mouseleave', function() {
+                    if (originalRows[index]) {
+                        originalRows[index].style.background = '';
+                        originalRows[index].style.transform = '';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

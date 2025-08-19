@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL TIMESTAMPDIFF Function Demo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .current-time {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .sql-query {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 30px;
+            font-size: 16px;
+            border-left: 4px solid #4299e1;
+        }
+
+        .demo-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .table-section {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .table-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2d3748;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 12px 8px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #e6fffa;
+            transform: scale(1.02);
+            transition: all 0.2s ease;
+        }
+
+        .hours-ago {
+            font-weight: bold;
+            color: #e53e3e;
+        }
+
+        .status-fresh {
+            background: #c6f6d5;
+            color: #22543d;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-recent {
+            background: #fed7d7;
+            color: #742a2a;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-old {
+            background: #e2e8f0;
+            color: #4a5568;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .explanation {
+            background: #e6fffa;
+            border: 2px solid #38b2ac;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .explanation h3 {
+            color: #2c7a7b;
+            margin-top: 0;
+        }
+
+        .time-units {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .unit-card {
+            background: white;
+            border: 2px solid #4299e1;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .unit-name {
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .unit-example {
+            color: #4299e1;
+            font-family: 'Courier New', monospace;
+        }
+
+        .live-demo {
+            background: #fff5f5;
+            border: 2px solid #fc8181;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .live-demo h3 {
+            color: #c53030;
+            margin-top: 0;
+        }
+
+        #liveTime {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: transform 0.2s ease;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .demo-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            table {
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 8px 4px;
+            }
+
+            .time-units {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .blink {
+            animation: blink 1s ease-in-out;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SQL TIMESTAMPDIFF Function Demonstration</h1>
+        <p class="subtitle">Understanding TIMESTAMPDIFF(HOUR, created_at, NOW())</p>
+        
+        <div class="current-time">
+            🕐 Current Time (NOW()): <span id="currentTime"></span>
+        </div>
+
+        <div class="sql-query">
+            SELECT post_id, title, created_at,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;TIMESTAMPDIFF(HOUR, created_at, NOW()) AS hours_ago,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;CASE<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHEN TIMESTAMPDIFF(HOUR, created_at, NOW()) &lt; 1 THEN 'Just now'<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHEN TIMESTAMPDIFF(HOUR, created_at, NOW()) &lt; 24 THEN 'Recent'<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELSE 'Older'<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;END AS status<br>
+            FROM blog_posts<br>
+            ORDER BY created_at DESC;
+        </div>
+
+        <div class="demo-container">
+            <div class="table-section">
+                <div class="table-title">📝 Blog Posts Data</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Post ID</th>
+                            <th>Title</th>
+                            <th>Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody id="originalTable">
+                        <tr>
+                            <td>101</td>
+                            <td>Latest News</td>
+                            <td id="time1"></td>
+                        </tr>
+                        <tr>
+                            <td>102</td>
+                            <td>Tech Update</td>
+                            <td id="time2"></td>
+                        </tr>
+                        <tr>
+                            <td>103</td>
+                            <td>Product Review</td>
+                            <td id="time3"></td>
+                        </tr>
+                        <tr>
+                            <td>104</td>
+                            <td>Tutorial Guide</td>
+                            <td id="time4"></td>
+                        </tr>
+                        <tr>
+                            <td>105</td>
+                            <td>Weekly Report</td>
+                            <td id="time5"></td>
+                        </tr>
+                        <tr>
+                            <td>106</td>
+                            <td>Archive Post</td>
+                            <td id="time6"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-section">
+                <div class="table-title">⏱️ With TIMESTAMPDIFF</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Post ID</th>
+                            <th>Hours Ago</th>
+                            <th>Status</th>
+                            <th>Human Readable</th>
+                        </tr>
+                    </thead>
+                    <tbody id="timestampTable">
+                        <tr>
+                            <td>101</td>
+                            <td class="hours-ago" id="hours1">0</td>
+                            <td><span class="status-fresh">Just now</span></td>
+                            <td>Just posted!</td>
+                        </tr>
+                        <tr>
+                            <td>102</td>
+                            <td class="hours-ago" id="hours2">3</td>
+                            <td><span class="status-fresh">Recent</span></td>
+                            <td>3 hours ago</td>
+                        </tr>
+                        <tr>
+                            <td>103</td>
+                            <td class="hours-ago" id="hours3">8</td>
+                            <td><span class="status-fresh">Recent</span></td>
+                            <td>8 hours ago</td>
+                        </tr>
+                        <tr>
+                            <td>104</td>
+                            <td class="hours-ago" id="hours4">18</td>
+                            <td><span class="status-recent">Recent</span></td>
+                            <td>18 hours ago</td>
+                        </tr>
+                        <tr>
+                            <td>105</td>
+                            <td class="hours-ago" id="hours5">72</td>
+                            <td><span class="status-old">Older</span></td>
+                            <td>3 days ago</td>
+                        </tr>
+                        <tr>
+                            <td>106</td>
+                            <td class="hours-ago" id="hours6">168</td>
+                            <td><span class="status-old">Older</span></td>
+                            <td>1 week ago</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="live-demo">
+            <h3>🔴 Live Demo - Watch the Time Change!</h3>
+            <p>This demo updates every second to show how TIMESTAMPDIFF would work with real data:</p>
+            <div id="liveTime"></div>
+            <button class="refresh-btn" onclick="updateLiveDemo()">🔄 Refresh Example</button>
+        </div>
+
+        <div class="explanation">
+            <h3>🎯 How TIMESTAMPDIFF Works:</h3>
+            <p><strong>TIMESTAMPDIFF(unit, start_date, end_date)</strong> calculates the difference between two timestamps in the specified unit.</p>
+            
+            <div class="time-units">
+                <div class="unit-card">
+                    <div class="unit-name">HOUR</div>
+                    <div class="unit-example">TIMESTAMPDIFF(HOUR, created_at, NOW())</div>
+                </div>
+                <div class="unit-card">
+                    <div class="unit-name">MINUTE</div>
+                    <div class="unit-example">TIMESTAMPDIFF(MINUTE, created_at, NOW())</div>
+                </div>
+                <div class="unit-card">
+                    <div class="unit-name">DAY</div>
+                    <div class="unit-example">TIMESTAMPDIFF(DAY, created_at, NOW())</div>
+                </div>
+                <div class="unit-card">
+                    <div class="unit-name">MONTH</div>
+                    <div class="unit-example">TIMESTAMPDIFF(MONTH, created_at, NOW())</div>
+                </div>
+                <div class="unit-card">
+                    <div class="unit-name">YEAR</div>
+                    <div class="unit-example">TIMESTAMPDIFF(YEAR, created_at, NOW())</div>
+                </div>
+                <div class="unit-card">
+                    <div class="unit-name">SECOND</div>
+                    <div class="unit-example">TIMESTAMPDIFF(SECOND, created_at, NOW())</div>
+                </div>
+            </div>
+
+            <h3>💡 Common Use Cases:</h3>
+            <ul>
+                <li><strong>"Time Ago" Display:</strong> Show "Posted 3 hours ago" in social media feeds</li>
+                <li><strong>Session Timeouts:</strong> Find users inactive for more than 30 minutes</li>
+                <li><strong>Data Freshness:</strong> Identify stale data that needs updating</li>
+                <li><strong>SLA Monitoring:</strong> Track response times and missed deadlines</li>
+                <li><strong>Age Calculations:</strong> Calculate how old records or users are</li>
+            </ul>
+
+            <h3>🔧 Key Points:</h3>
+            <ul>
+                <li><strong>Order Matters:</strong> TIMESTAMPDIFF(unit, older_date, newer_date) gives positive values</li>
+                <li><strong>NOW() is Dynamic:</strong> Result changes each time the query runs</li>
+                <li><strong>Truncated Results:</strong> Returns whole numbers (8.7 hours becomes 8)</li>
+                <li><strong>Negative Values:</strong> If start_date > end_date, result is negative</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function formatDateTime(date) {
+            return date.toLocaleString('en-US', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        function updateCurrentTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = formatDateTime(now);
+        }
+
+        function initializeSampleData() {
+            const now = new Date();
+            
+            // Create sample timestamps at different intervals
+            const times = [
+                new Date(now.getTime() - (30 * 60 * 1000)), // 30 minutes ago
+                new Date(now.getTime() - (3 * 60 * 60 * 1000)), // 3 hours ago
+                new Date(now.getTime() - (8 * 60 * 60 * 1000)), // 8 hours ago
+                new Date(now.getTime() - (18 * 60 * 60 * 1000)), // 18 hours ago
+                new Date(now.getTime() - (72 * 60 * 60 * 1000)), // 72 hours ago
+                new Date(now.getTime() - (168 * 60 * 60 * 1000)) // 168 hours ago (1 week)
+            ];
+
+            // Update the timestamp displays
+            times.forEach((time, index) => {
+                document.getElementById(`time${index + 1}`).textContent = formatDateTime(time);
+            });
+        }
+
+        function updateHoursDifferences() {
+            const now = new Date();
+            
+            const intervals = [30/60, 3, 8, 18, 72, 168]; // minutes for first, hours for rest
+            
+            intervals.forEach((interval, index) => {
+                let hours;
+                if (index === 0) {
+                    // First one is in minutes, convert to hours
+                    hours = Math.floor(interval);
+                } else {
+                    hours = Math.floor(interval);
+                }
+                
+                const hoursElement = document.getElementById(`hours${index + 1}`);
+                hoursElement.textContent = hours;
+                hoursElement.classList.add('blink');
+                
+                setTimeout(() => {
+                    hoursElement.classList.remove('blink');
+                }, 1000);
+            });
+        }
+
+        function updateLiveDemo() {
+            const now = new Date();
+            const pastTime = new Date(now.getTime() - (2.5 * 60 * 60 * 1000)); // 2.5 hours ago
+            const hoursDiff = Math.floor((now - pastTime) / (1000 * 60 * 60));
+            
+            document.getElementById('liveTime').innerHTML = `
+                <strong>Sample Record:</strong> Created at ${formatDateTime(pastTime)}<br>
+                <strong>Current Time:</strong> ${formatDateTime(now)}<br>
+                <strong>TIMESTAMPDIFF(HOUR, created_at, NOW()):</strong> <span class="hours-ago">${hoursDiff} hours</span>
+            `;
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentTime();
+            initializeSampleData();
+            updateHoursDifferences();
+            updateLiveDemo();
+            
+            // Update current time every second
+            setInterval(updateCurrentTime, 1000);
+            
+            // Update hours differences every 10 seconds for demo effect
+            setInterval(updateHoursDifferences, 10000);
+        });
+    </script>
+</body>
+</html>

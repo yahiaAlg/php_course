@@ -1,0 +1,197 @@
+<!-- <!DOCTYPE html>
+<html>
+
+<head>
+    <title>SQL COALESCE Example</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .query-result {
+            background-color: #e6f7ff;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Customer Table</h2>
+    <table>
+        <tr>
+            <th>id</th>
+            <th>name</th>
+            <th>phone</th>
+            <th>email</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>John</td>
+            <td>123-456-7890</td>
+            <td>john@example.com</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Jane</td>
+            <td>NULL</td>
+            <td>jane@example.com</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Bob</td>
+            <td>555-123-4567</td>
+            <td>NULL</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>Alice</td>
+            <td>NULL</td>
+            <td>NULL</td>
+        </tr>
+    </table>
+
+    <h2>Query Result: SELECT COALESCE(phone, email, 'No Contact') FROM customer</h2>
+    <table class="query-result">
+        <tr>
+            <th>Contact Information</th>
+        </tr>
+        <tr>
+            <td>123-456-7890</td>
+        </tr>
+        <tr>
+            <td>jane@example.com</td>
+        </tr>
+        <tr>
+            <td>555-123-4567</td>
+        </tr>
+        <tr>
+            <td>No Contact</td>
+        </tr>
+    </table>
+</body>
+
+</html> -->
+
+
+
+
+
+<!-- another example -->
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SQL LAG Example</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .query-result {
+            background-color: #e6f7ff;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Product Price History</h2>
+    <table>
+        <tr>
+            <th>id</th>
+            <th>product_name</th>
+            <th>price</th>
+            <th>created_at</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Laptop</td>
+            <td>999</td>
+            <td>2023-01-01 10:00:00</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Laptop</td>
+            <td>1099</td>
+            <td>2023-01-02 10:00:00</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Laptop</td>
+            <td>1049</td>
+            <td>2023-01-03 10:00:00</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>Laptop</td>
+            <td>1029</td>
+            <td>2023-01-04 10:00:00</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>Laptop</td>
+            <td>999</td>
+            <td>2023-01-05 10:00:00</td>
+        </tr>
+    </table>
+
+    <h2>Query Result: SELECT LAG(price, 1) OVER (ORDER BY created_at) FROM products</h2>
+    <table class="query-result">
+        <tr>
+            <th>Previous Price</th>
+        </tr>
+        <tr>
+            <td>NULL</td>
+        </tr>
+        <tr>
+            <td>999</td>
+        </tr>
+        <tr>
+            <td>1099</td>
+        </tr>
+        <tr>
+            <td>1049</td>
+        </tr>
+        <tr>
+            <td>1029</td>
+        </tr>
+    </table>
+
+    <p><strong>Explanation:</strong></p>
+    <ul>
+        <li>The first row has NULL for the previous price because there is no row before it to reference.</li>
+        <li>The second row shows 999 as the previous price, which is the price from the first row.</li>
+        <li>The third row shows 1099 as the previous price, which is the price from the second row.</li>
+        <li>And so on for subsequent rows.</li>
+    </ul>
+</body>
+
+</html>
