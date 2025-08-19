@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MariaDB Functions Reference Guide</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            color: white;
+            padding: 15px 20px;
+            margin: 0 0 20px 0;
+            border-radius: 8px;
+            font-size: 1.4em;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        th {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ecf0f1;
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #e3f2fd;
+            transform: scale(1.01);
+            transition: all 0.2s ease;
+        }
+
+        .function-name {
+            font-family: 'Courier New', monospace;
+            background: #e8f4fd;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .example {
+            font-family: 'Courier New', monospace;
+            background: #f1f8ff;
+            padding: 8px;
+            border-left: 4px solid #3498db;
+            border-radius: 4px;
+            color: #2c3e50;
+            font-size: 0.9em;
+            white-space: nowrap;
+            overflow-x: auto;
+        }
+
+        .use-case {
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .category-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .search-functions {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+        }
+
+        .date-functions {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+        }
+
+        .numeric-functions {
+            background: linear-gradient(45deg, #27ae60, #229954);
+        }
+
+        .string-functions {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+        }
+
+        .aggregate-functions {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+        }
+
+        .window-functions {
+            background: linear-gradient(45deg, #1abc9c, #16a085);
+        }
+
+        .conditional-functions {
+            background: linear-gradient(45deg, #e91e63, #ad1457);
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #ffeaa7, #fdcb6e);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            table {
+                font-size: 0.85em;
+            }
+
+            th,
+            td {
+                padding: 8px 6px;
+            }
+
+            .example {
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🗄️ MariaDB Functions Reference Guide</h1>
+
+        <div class="section">
+            <h2>🔍 Search & Pattern Matching Functions</h2>
+            <span class="category-badge search-functions">Search Functions</span>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Function</th>
+                        <th style="width: 35%;">Use Case</th>
+                        <th style="width: 45%;">Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="function-name">LIKE</span></td>
+                        <td class="use-case">Pattern matching with wildcards</td>
+                        <td>
+                            <div class="example">SELECT * FROM customer WHERE name LIKE '%Smith%'</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">REGEXP</span></td>
+                        <td class="use-case">Regular expression matching</td>
+                        <td>
+                            <div class="example">SELECT * FROM product WHERE name REGEXP '^(Smart|Wireless)'</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">MATCH...AGAINST</span></td>
+                        <td class="use-case">Full-text search</td>
+                        <td>
+                            <div class="example">SELECT * FROM product WHERE MATCH(name) AGAINST('wireless')</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">SOUNDEX</span></td>
+                        <td class="use-case">Phonetic matching</td>
+                        <td>
+                            <div class="example">SELECT * FROM customer WHERE SOUNDEX(name) = SOUNDEX('Jon')</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">IN</span></td>
+                        <td class="use-case">Multiple value matching</td>
+                        <td>
+                            <div class="example">SELECT * FROM order WHERE status IN ('Pending', 'Processing')</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">BETWEEN</span></td>
+                        <td class="use-case">Range filtering</td>
+                        <td>
+                            <div class="example">SELECT * FROM product WHERE price BETWEEN 100 AND 500</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">EXISTS</span></td>
+                        <td class="use-case">Subquery existence check</td>
+                        <td>
+                            <div class="example">SELECT * FROM customer WHERE EXISTS (SELECT 1 FROM order WHERE
+                                customer_id = customer.id)</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>📅 Date & Time Functions</h2>
+            <span class="category-badge date-functions">Date Functions</span>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Function</th>
+                        <th style="width: 35%;">Use Case</th>
+                        <th style="width: 45%;">Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="function-name">NOW()</span></td>
+                        <td class="use-case">Current datetime</td>
+                        <td>
+                            <div class="example">SELECT NOW()</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">CURDATE()</span></td>
+                        <td class="use-case">Current date</td>
+                        <td>
+                            <div class="example">SELECT CURDATE()</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">DATE_FORMAT</span></td>
+                        <td class="use-case">Format dates</td>
+                        <td>
+                            <div class="example">SELECT DATE_FORMAT(ship_date, '%Y-%m-%d')</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">DATEDIFF</span></td>
+                        <td class="use-case">Days between dates</td>
+                        <td>
+                            <div class="example">SELECT DATEDIFF(CURDATE(), ship_date) AS days_ago</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">TIMESTAMPDIFF</span></td>
+                        <td class="use-case">Time difference in units</td>
+                        <td>
+                            <div class="example">SELECT TIMESTAMPDIFF(HOUR, created_at, NOW())</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">DATE_ADD</span></td>
+                        <td class="use-case">Add time intervals</td>
+                        <td>
+                            <div class="example">SELECT DATE_ADD(ship_date, INTERVAL 30 DAY)</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">DAYNAME</span></td>
+                        <td class="use-case">Day of week name</td>
+                        <td>
+                            <div class="example">SELECT DAYNAME(ship_date)</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">MONTHNAME</span></td>
+                        <td class="use-case">Month name</td>
+                        <td>
+                            <div class="example">SELECT MONTHNAME(ship_date)</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">QUARTER</span></td>
+                        <td class="use-case">Quarter of year</td>
+                        <td>
+                            <div class="example">SELECT QUARTER(ship_date)</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">YEARWEEK</span></td>
+                        <td class="use-case">Year and week number</td>
+                        <td>
+                            <div class="example">SELECT YEARWEEK(ship_date)</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>🔢 Numeric & Math Functions</h2>
+            <span class="category-badge numeric-functions">Numeric Functions</span>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Function</th>
+                        <th style="width: 35%;">Use Case</th>
+                        <th style="width: 45%;">Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="function-name">ROUND</span></td>
+                        <td class="use-case">Round to decimal places</td>
+                        <td>
+                            <div class="example">SELECT ROUND(price * 0.9, 2) AS discount_price</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">CEILING</span></td>
+                        <td class="use-case">Round up to integer</td>
+                        <td>
+                            <div class="example">SELECT CEILING(price)</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">FLOOR</span></td>
+                        <td class="use-case">Round down to integer</td>
+                        <td>
+                            <div class="example">SELECT FLOOR(price)</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">ABS</span></td>
+                        <td class="use-case">Absolute value</td>
+                        <td>
+                            <div class="example">SELECT ABS(-50)</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">MOD</span></td>
+                        <td class="use-case">Modulo operation</td>
+                        <td>
+                            <div class="example">SELECT MOD(price, 100)</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">POWER</span></td>
+                        <td class="use-case">Exponentiation</td>
+                        <td>
+                            <div class="example">SELECT POWER(price, 2)</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">SQRT</span></td>
+                        <td class="use-case">Square root</td>
+                        <td>
+                            <div class="example">SELECT SQRT(price)</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">RAND</span></td>
+                        <td class="use-case">Random number</td>
+                        <td>
+                            <div class="example">SELECT * FROM product ORDER BY RAND() LIMIT 1</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>📝 String Functions</h2>
+            <span class="category-badge string-functions">String Functions</span>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Function</th>
+                        <th style="width: 35%;">Use Case</th>
+                        <th style="width: 45%;">Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="function-name">CONCAT</span></td>
+                        <td class="use-case">Concatenate strings</td>
+                        <td>
+                            <div class="example">SELECT CONCAT(name, ' - ', reference) FROM product</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">LENGTH</span></td>
+                        <td class="use-case">String length in bytes</td>
+                        <td>
+                            <div class="example">SELECT LENGTH(name) FROM customer</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">CHAR_LENGTH</span></td>
+                        <td class="use-case">Character count</td>
+                        <td>
+                            <div class="example">SELECT CHAR_LENGTH(name) FROM customer</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">SUBSTRING</span></td>
+                        <td class="use-case">Extract substring</td>
+                        <td>
+                            <div class="example">SELECT SUBSTRING(name, 1, 10) FROM product</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">LEFT/RIGHT</span></td>
+                        <td class="use-case">Extract from left/right</td>
+                        <td>
+                            <div class="example">SELECT LEFT(name, 5), RIGHT(phone, 4) FROM customer</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">UPPER/LOWER</span></td>
+                        <td class="use-case">Case conversion</td>
+                        <td>
+                            <div class="example">SELECT UPPER(name), LOWER(email) FROM customer</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">TRIM</span></td>
+                        <td class="use-case">Remove whitespace</td>
+                        <td>
+                            <div class="example">SELECT TRIM(name) FROM customer</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">REPLACE</span></td>
+                        <td class="use-case">Replace text</td>
+                        <td>
+                            <div class="example">SELECT REPLACE(phone, '+1-', '') FROM customer</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">SUBSTRING_INDEX</span></td>
+                        <td class="use-case">Split by delimiter</td>
+                        <td>
+                            <div class="example">SELECT SUBSTRING_INDEX(email, '@', 1) AS username</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>📊 Aggregate Functions</h2>
+            <span class="category-badge aggregate-functions">Aggregate Functions</span>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Function</th>
+                        <th style="width: 35%;">Use Case</th>
+                        <th style="width: 45%;">Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="function-name">COUNT</span></td>
+                        <td class="use-case">Count rows</td>
+                        <td>
+                            <div class="example">SELECT COUNT(*) FROM customer</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">SUM</span></td>
+                        <td class="use-case">Sum values</td>
+                        <td>
+                            <div class="example">SELECT SUM(quantity * price) AS total</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">AVG</span></td>
+                        <td class="use-case">Average value</td>
+                        <td>
+                            <div class="example">SELECT AVG(price) FROM product</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">MIN/MAX</span></td>
+                        <td class="use-case">Minimum/maximum value</td>
+                        <td>
+                            <div class="example">SELECT MIN(price), MAX(price) FROM product</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">GROUP_CONCAT</span></td>
+                        <td class="use-case">Concatenate group values</td>
+                        <td>
+                            <div class="example">SELECT GROUP_CONCAT(name) FROM product WHERE discount = 1</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">STD</span></td>
+                        <td class="use-case">Standard deviation</td>
+                        <td>
+                            <div class="example">SELECT STD(price) FROM product</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">VARIANCE</span></td>
+                        <td class="use-case">Variance calculation</td>
+                        <td>
+                            <div class="example">SELECT VARIANCE(price) FROM product</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>🪟 Window Functions</h2>
+            <span class="category-badge window-functions">Window Functions</span>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Function</th>
+                        <th style="width: 35%;">Use Case</th>
+                        <th style="width: 45%;">Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="function-name">ROW_NUMBER</span></td>
+                        <td class="use-case">Sequential numbering</td>
+                        <td>
+                            <div class="example">SELECT ROW_NUMBER() OVER (ORDER BY price DESC) FROM product</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">RANK</span></td>
+                        <td class="use-case">Ranking with gaps</td>
+                        <td>
+                            <div class="example">SELECT RANK() OVER (ORDER BY price DESC) FROM product</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">DENSE_RANK</span></td>
+                        <td class="use-case">Ranking without gaps</td>
+                        <td>
+                            <div class="example">SELECT DENSE_RANK() OVER (ORDER BY price DESC) FROM product</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">NTILE</span></td>
+                        <td class="use-case">Divide into buckets</td>
+                        <td>
+                            <div class="example">SELECT NTILE(4) OVER (ORDER BY price) AS quartile</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">LAG/LEAD</span></td>
+                        <td class="use-case">Previous/next row value</td>
+                        <td>
+                            <div class="example">SELECT LAG(price, 1) OVER (ORDER BY created_at)</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">FIRST_VALUE</span></td>
+                        <td class="use-case">First value in partition</td>
+                        <td>
+                            <div class="example">SELECT FIRST_VALUE(price) OVER (PARTITION BY category ORDER BY price)
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">LAST_VALUE</span></td>
+                        <td class="use-case">Last value in partition</td>
+                        <td>
+                            <div class="example">SELECT LAST_VALUE(price) OVER (PARTITION BY category ORDER BY price)
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">PERCENT_RANK</span></td>
+                        <td class="use-case">Percentile ranking</td>
+                        <td>
+                            <div class="example">SELECT PERCENT_RANK() OVER (ORDER BY price)</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>🔀 Conditional Functions</h2>
+            <span class="category-badge conditional-functions">Conditional Functions</span>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Function</th>
+                        <th style="width: 35%;">Use Case</th>
+                        <th style="width: 45%;">Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="function-name">CASE</span></td>
+                        <td class="use-case">Conditional logic</td>
+                        <td>
+                            <div class="example">SELECT CASE WHEN price > 500 THEN 'Expensive' ELSE 'Affordable' END
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">IF</span></td>
+                        <td class="use-case">Simple condition</td>
+                        <td>
+                            <div class="example">SELECT IF(discount = 1, 'On Sale', 'Regular') FROM product</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">IFNULL</span></td>
+                        <td class="use-case">Handle NULL values</td>
+                        <td>
+                            <div class="example">SELECT IFNULL(phone, 'No Phone') FROM customer</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">NULLIF</span></td>
+                        <td class="use-case">Return NULL if equal</td>
+                        <td>
+                            <div class="example">SELECT NULLIF(discount, 0) FROM product</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="function-name">COALESCE</span></td>
+                        <td class="use-case">First non-NULL value</td>
+                        <td>
+                            <div class="example">SELECT COALESCE(phone, email, 'No Contact') FROM customer</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>💡 Pro Tips</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 30%;">Technique</th>
+                        <th style="width: 70%;">Example & Benefits</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="highlight">Index Usage</span></td>
+                        <td>
+                            <div class="example">CREATE INDEX idx_price ON product(price); -- Speeds up WHERE price
+                                BETWEEN queries</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">CTE for Readability</span></td>
+                        <td>
+                            <div class="example">WITH top_customers AS (SELECT...) SELECT * FROM top_customers;</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">Subquery vs JOIN</span></td>
+                        <td>
+                            <div class="example">Use EXISTS instead of IN for better performance with large datasets
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">LIMIT with OFFSET</span></td>
+                        <td>
+                            <div class="example">SELECT * FROM customer ORDER BY id LIMIT 10 OFFSET 20; -- Pagination
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>
