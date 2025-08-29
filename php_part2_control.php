@@ -1,695 +1,3 @@
-# PHP Fundamentals: A Complete Learning Journey
-
-## Understanding What You're About to Learn
-
-Before we dive into PHP, let me help you understand what programming really is. Think of programming like giving directions to someone who follows instructions exactly as written, without making assumptions. PHP is the language we use to give these directions to a computer, specifically for creating websites and web applications.
-
-When you visit a website, your browser (like Chrome or Firefox) sends a request to a server computer. That server runs PHP code to figure out what to send back to you - maybe a personalized homepage, search results, or a shopping cart. PHP is the behind-the-scenes worker that makes websites interactive and dynamic.
-
----
-
-## Chapter 1: PHP Constants - Your Program's Fixed Reference Points
-
-### What Are Constants and Why Do They Matter?
-
-Imagine you're writing a recipe book. Some things in your recipes never change - water always boils at 212°F, there are always 16 ounces in a pound, and your bakery's name is always "Sweet Dreams Bakery." These are constants in your recipe world.
-
-In programming, constants work the same way. They're values that you name once and promise never to change throughout your entire program. This might seem limiting at first, but it's actually incredibly powerful for several reasons.
-
-First, constants make your code more readable. Instead of seeing the number 3.14159 scattered throughout your code, you see PI, which immediately tells you what that number represents. Second, they prevent errors. If you accidentally try to change a constant, PHP will stop you. Third, they make maintenance easier. If you ever need to change a value that appears in multiple places, you only change it once.
-
-### Creating Your First Constants
-
-Let's start with the most basic way to create constants in PHP. We use the `define()` function, which is like putting a permanent label on a box that will never change its contents.
-
-```php
-<?php
-// Think of this as creating a permanent name tag for the value
-define("WEBSITE_NAME", "Learning PHP Together");
-define("MAX_LOGIN_ATTEMPTS", 3);
-define("SALES_TAX_RATE", 0.08);
-
-// Now we can use these anywhere in our program
-echo "Welcome to " . WEBSITE_NAME;
-// This outputs: Welcome to Learning PHP Together
-?>
-```
-
-Notice several important things about this code. First, we always start PHP code with `<?php` - this tells the server "everything after this is PHP code, not regular HTML." Second, constant names are traditionally written in ALL_CAPS with underscores between words. This is a convention that helps other programmers (and future you) immediately recognize that something is a constant.
-
-The `define()` function takes two main pieces of information: the name you want to give your constant (in quotes), and the value you want to store. Once you've defined a constant, you can use it anywhere in your program just by typing its name - no quotes needed when you're using it.
-
-### Understanding Constant Behavior Through Examples
-
-Let's explore how constants behave differently from regular variables through a practical example. Imagine you're building a simple e-commerce system.
-
-```php
-<?php
-// These are constants - they represent fixed business rules
-define("FREE_SHIPPING_THRESHOLD", 50.00);
-define("COMPANY_NAME", "TechShop Pro");
-define("TAX_RATE", 0.07);
-
-// Let's calculate an order total
-$item_price = 45.00;  // This is a variable - it can change
-$quantity = 2;        // This is also a variable
-
-$subtotal = $item_price * $quantity;  // $90.00
-$tax = $subtotal * TAX_RATE;          // $6.30
-$total = $subtotal + $tax;            // $96.30
-
-// Check if customer qualifies for free shipping
-if ($subtotal >= FREE_SHIPPING_THRESHOLD) {
-    echo "Congratulations! You qualify for free shipping from " . COMPANY_NAME;
-    $shipping_cost = 0;
-} else {
-    $shipping_cost = 5.99;
-    $total = $total + $shipping_cost;
-}
-
-echo "Your total from " . COMPANY_NAME . " is $" . $total;
-?>
-```
-
-In this example, notice how the constants represent business rules that shouldn't change during the program's execution. The free shipping threshold, company name, and tax rate are stable values. The variables, marked with dollar signs, represent data that changes based on what the customer is buying.
-
-### The Modern Way: Using the `const` Keyword
-
-PHP also offers a more modern way to create constants using the `const` keyword. This method is slightly different but often more convenient.
-
-```php
-<?php
-// Modern constant definition
-const DATABASE_HOST = "localhost";
-const DATABASE_PORT = 3306;
-const API_VERSION = "v2.1";
-
-// You can even define constants with arrays (PHP 5.6+)
-const ALLOWED_FILE_TYPES = ["jpg", "png", "gif", "pdf"];
-
-// Using these constants
-$connection_string = "mysql:host=" . DATABASE_HOST . ";port=" . DATABASE_PORT;
-echo "Connecting to " . $connection_string;
-?>
-```
-
-The `const` keyword is particularly useful because it can be used in places where `define()` cannot, such as inside classes (which we'll learn about later). It also feels more natural to many programmers because it reads like English: "const DATABASE_HOST equals localhost."
-
-### Common Mistakes and How to Avoid Them
-
-Let me show you some mistakes that beginners often make with constants, and more importantly, how to avoid them.
-
-```php
-<?php
-// MISTAKE 1: Trying to use a dollar sign with constants
-// define("$WRONG_NAME", "This won't work");  // This is wrong!
-define("CORRECT_NAME", "This works perfectly");
-
-// MISTAKE 2: Trying to change a constant after it's defined
-define("SITE_VERSION", "1.0");
-// SITE_VERSION = "1.1";  // This would cause an error!
-
-// MISTAKE 3: Using quotes when accessing constants
-// echo "SITE_VERSION";  // This just prints the text "SITE_VERSION"
-echo SITE_VERSION;       // This prints the actual value "1.0"
-
-// CORRECT WAY: If you need the constant value inside a string
-echo "The current version is " . SITE_VERSION;
-// Or use string interpolation carefully
-echo "The current version is {SITE_VERSION}";  // This won't work with constants
-echo "The current version is " . SITE_VERSION;  // This is the right way
-?>
-```
-
-### Why Constants Make Your Code Better
-
-Let me show you a real-world example of how constants improve code quality. Imagine you're building a user registration system without constants first:
-
-```php
-<?php
-// BAD: Without constants - hard to understand and maintain
-if (strlen($password) < 8) {
-    echo "Password too short";
-}
-if ($login_attempts > 3) {
-    echo "Account locked";
-}
-if ($user_age < 13) {
-    echo "Must be 13 or older";
-}
-?>
-```
-
-Now let's rewrite this with constants:
-
-```php
-<?php
-// GOOD: With constants - clear and maintainable
-const MIN_PASSWORD_LENGTH = 8;
-const MAX_LOGIN_ATTEMPTS = 3;
-const MINIMUM_AGE = 13;
-
-if (strlen($password) < MIN_PASSWORD_LENGTH) {
-    echo "Password must be at least " . MIN_PASSWORD_LENGTH . " characters";
-}
-if ($login_attempts > MAX_LOGIN_ATTEMPTS) {
-    echo "Account locked after " . MAX_LOGIN_ATTEMPTS . " failed attempts";
-}
-if ($user_age < MINIMUM_AGE) {
-    echo "Must be " . MINIMUM_AGE . " or older to register";
-}
-?>
-```
-
-The second version is much clearer about what the numbers mean, and if you ever need to change the minimum password length, you only change it in one place instead of hunting through your entire codebase.
-
----
-
-## Chapter 2: PHP Magic Constants - PHP's Built-in Helpers
-
-### Understanding Magic Constants
-
-Magic constants are special constants that PHP automatically creates and updates for you. They're called "magic" because they change their values depending on where they are in your code. Think of them as smart constants that are aware of their surroundings.
-
-Imagine you're in a large office building with many floors and rooms. A magic constant would be like a smart badge that always knows which floor you're on, which room you're in, and what time it is. These constants help PHP (and you) keep track of important information about where code is running and what's happening.
-
-### The Most Useful Magic Constants
-
-Let's explore the magic constants you'll use most often, starting with `__FILE__` and `__DIR__`:
-
-```php
-<?php
-// __FILE__ tells you exactly which file this code is in
-echo "This code is running in: " . __FILE__;
-// Might output: This code is running in: /home/user/website/login.php
-
-// __DIR__ tells you which directory (folder) this file is in
-echo "This file is in the directory: " . __DIR__;
-// Might output: This file is in the directory: /home/user/website
-
-// This is incredibly useful for including other files
-include __DIR__ . "/config.php";  // Always finds config.php in the same folder
-include __DIR__ . "/helpers/database.php";  // Finds database.php in the helpers subfolder
-?>
-```
-
-These magic constants solve a common problem in web development: knowing where your files are located. Without them, you'd have to guess the full path to other files, which breaks when you move your code to a different server or organize your folders differently.
-
-### Line Numbers and Function Names
-
-The `__LINE__` and `__FUNCTION__` constants help you understand what's happening in your code, especially when you're debugging or logging information:
-
-```php
-<?php
-function processUserLogin($username, $password) {
-    // Log that we're starting the login process
-    echo "Starting login process on line " . __LINE__ . " in function " . __FUNCTION__;
-
-    // Simulate some login validation
-    if (empty($username)) {
-        echo "Error on line " . __LINE__ . ": Username cannot be empty";
-        return false;
-    }
-
-    if (strlen($password) < 8) {
-        echo "Error on line " . __LINE__ . ": Password too short";
-        return false;
-    }
-
-    // If we get here, login was successful
-    echo "Login successful on line " . __LINE__;
-    return true;
-}
-
-// Test the function
-processUserLogin("john_doe", "mypassword123");
-?>
-```
-
-This might seem like extra work, but when you're debugging a complex application with thousands of lines of code, these magic constants become invaluable. They help you pinpoint exactly where problems are occurring.
-
-### Building a Simple Debugging System
-
-Let's create a practical example that shows how magic constants work together to create a useful debugging system:
-
-```php
-<?php
-// A simple debug function that uses multiple magic constants
-function debugMessage($message, $level = "INFO") {
-    $timestamp = date("Y-m-d H:i:s");
-    $file = basename(__FILE__);  // Just the filename, not the full path
-    $line = __LINE__;
-
-    echo "[$timestamp] [$level] $file:$line - $message" . PHP_EOL;
-}
-
-// Using our debug function
-debugMessage("Application starting");
-
-$user_id = 12345;
-debugMessage("Processing user ID: $user_id");
-
-// Simulate an error condition
-if ($user_id > 10000) {
-    debugMessage("User ID is unusually high - might be a problem", "WARNING");
-}
-
-debugMessage("Application finished");
-?>
-```
-
-This debugging system automatically tracks when things happen, where they happen, and what level of importance they have. In a real application, you might write these messages to a log file instead of displaying them, but the concept remains the same.
-
-### Understanding Class and Method Magic Constants
-
-As you advance in PHP, you'll work with classes and methods. The `__CLASS__` and `__METHOD__` magic constants become very useful in these contexts:
-
-```php
-<?php
-class UserManager {
-    public function createUser($username, $email) {
-        echo "Method " . __METHOD__ . " called in class " . __CLASS__;
-
-        // Simulate user creation process
-        echo "Creating user: $username with email: $email";
-
-        // Log the action
-        $this->logAction("User created: $username");
-    }
-
-    private function logAction($message) {
-        $timestamp = date("Y-m-d H:i:s");
-        echo "[$timestamp] " . __CLASS__ . " - $message";
-    }
-}
-
-// Using the class
-$userManager = new UserManager();
-$userManager->createUser("alice_smith", "alice@example.com");
-?>
-```
-
-Even if you don't understand classes yet, you can see how `__CLASS__` and `__METHOD__` help track which piece of code is running. This becomes essential when you're working with large applications that have many classes and methods.
-
-### Practical Applications of Magic Constants
-
-Let's build a more comprehensive example that shows how magic constants work in a real-world scenario. Imagine you're building a simple content management system:
-
-```php
-<?php
-// Configuration file that uses magic constants
-const CONFIG_FILE = __DIR__ . "/config.php";
-const TEMPLATE_DIR = __DIR__ . "/templates";
-const LOG_FILE = __DIR__ . "/logs/application.log";
-
-function loadTemplate($templateName) {
-    $templatePath = TEMPLATE_DIR . "/$templateName.php";
-
-    if (file_exists($templatePath)) {
-        echo "Loading template from: $templatePath (called from line " . __LINE__ . ")";
-        include $templatePath;
-        return true;
-    } else {
-        logError("Template not found: $templatePath");
-        return false;
-    }
-}
-
-function logError($message) {
-    $timestamp = date("Y-m-d H:i:s");
-    $caller = basename(__FILE__) . ":" . __LINE__;
-    $logMessage = "[$timestamp] ERROR at $caller - $message" . PHP_EOL;
-
-    // In a real application, you'd write this to a file
-    echo $logMessage;
-}
-
-// Using the system
-echo "Application starting in " . __DIR__;
-loadTemplate("header");
-loadTemplate("navigation");
-loadTemplate("content");
-loadTemplate("footer");
-?>
-```
-
-This example shows how magic constants help create a flexible, maintainable system. The paths automatically adjust based on where the files are located, and the logging system provides detailed information about what's happening and where.
-
----
-
-## Chapter 3: PHP Operators - The Building Blocks of Logic
-
-### Understanding What Operators Really Do
-
-Operators are the symbols that tell PHP how to manipulate data. Think of them as the verbs in the language of programming - they describe actions you want to perform. Just as English has action words like "add," "compare," and "combine," PHP has symbols like `+`, `==`, and `.` that perform these actions on your data.
-
-Understanding operators is crucial because they appear in almost every line of meaningful PHP code. They're the tools you use to perform calculations, make decisions, and transform data. Let's explore each type of operator with detailed explanations and real-world examples.
-
-### Arithmetic Operators: The Mathematical Foundation
-
-Arithmetic operators work exactly like the math you learned in school, but with some important considerations for programming:
-
-```php
-<?php
-// Basic arithmetic operations
-$price = 29.99;
-$quantity = 3;
-$discount = 5.00;
-
-// Addition: combining values
-$subtotal = $price * $quantity;  // $89.97
-echo "Subtotal: $" . $subtotal;
-
-// Subtraction: taking away
-$final_price = $subtotal - $discount;  // $84.97
-echo "After discount: $" . $final_price;
-
-// Division: splitting into parts
-$price_per_item = $final_price / $quantity;  // $28.32333...
-echo "Price per item after discount: $" . $price_per_item;
-
-// Modulus: finding the remainder (very useful for programming)
-$remainder = 17 % 5;  // 2 (because 17 divided by 5 is 3 with remainder 2)
-echo "17 divided by 5 has remainder: " . $remainder;
-?>
-```
-
-The modulus operator (`%`) deserves special attention because it's incredibly useful in programming but often confusing for beginners. Think of it as the "remainder" operator. When you divide 17 by 5, you get 3 with 2 left over. The modulus operator gives you that leftover part.
-
-Here's a practical example of how modulus is used:
-
-```php
-<?php
-// Checking if a number is even or odd
-$number = 42;
-if ($number % 2 == 0) {
-    echo "$number is even";
-} else {
-    echo "$number is odd";
-}
-
-// Creating alternating row colors in a table
-for ($row = 1; $row <= 10; $row++) {
-    if ($row % 2 == 0) {
-        echo "Row $row: Light gray background";
-    } else {
-        echo "Row $row: White background";
-    }
-}
-?>
-```
-
-### Assignment Operators: Storing and Modifying Data
-
-Assignment operators do more than just store values - they can perform operations while assigning:
-
-```php
-<?php
-$score = 100;  // Basic assignment
-
-// Compound assignment operators (shortcuts)
-$score += 10;   // Same as: $score = $score + 10;  (now $score is 110)
-$score -= 5;    // Same as: $score = $score - 5;   (now $score is 105)
-$score *= 2;    // Same as: $score = $score * 2;   (now $score is 210)
-$score /= 3;    // Same as: $score = $score / 3;   (now $score is 70)
-
-// Increment and decrement operators
-$counter = 5;
-$counter++;     // Increases by 1 (now $counter is 6)
-$counter--;     // Decreases by 1 (now $counter is 5)
-
-// Pre-increment vs post-increment (important difference)
-$a = 5;
-$b = ++$a;      // $a is incremented first, then $b gets the value (both are 6)
-
-$x = 5;
-$y = $x++;      // $y gets the current value of $x (5), then $x is incremented (6)
-echo "After post-increment: x=$x, y=$y";  // x=6, y=5
-?>
-```
-
-The difference between pre-increment (`++$variable`) and post-increment (`$variable++`) is subtle but important. Pre-increment changes the value first, then returns it. Post-increment returns the current value, then changes it.
-
-### Comparison Operators: Making Decisions
-
-Comparison operators are fundamental to creating intelligent programs that can make decisions:
-
-```php
-<?php
-$user_age = 25;
-$minimum_age = 18;
-$user_score = 85;
-$passing_score = 70;
-
-// Equal (checks value only)
-if ($user_score == 85) {
-    echo "Score is exactly 85";
-}
-
-// Identical (checks value AND type)
-$number_string = "85";
-if ($user_score === $number_string) {
-    echo "This won't execute because 85 (integer) !== '85' (string)";
-}
-
-// Not equal
-if ($user_age != $minimum_age) {
-    echo "User age is not exactly the minimum age";
-}
-
-// Greater than, less than
-if ($user_age >= $minimum_age) {
-    echo "User is old enough";
-}
-
-if ($user_score > $passing_score) {
-    echo "User passed the test";
-}
-
-// The spaceship operator (PHP 7+) - returns -1, 0, or 1
-$comparison = $user_score <=> $passing_score;
-// Returns 1 if left > right, -1 if left < right, 0 if equal
-echo "Comparison result: $comparison";  // Will output: 1
-?>
-```
-
-The difference between `==` and `===` is crucial in PHP. The double equals (`==`) checks if values are equal after PHP converts them to the same type. The triple equals (`===`) checks if values are identical without any conversion.
-
-```php
-<?php
-// Demonstrating the difference between == and ===
-$number = 5;
-$string = "5";
-
-if ($number == $string) {
-    echo "These are equal (PHP converts '5' to 5)";  // This will execute
-}
-
-if ($number === $string) {
-    echo "These are identical";  // This will NOT execute
-} else {
-    echo "These are not identical (different types)";  // This will execute
-}
-
-// This becomes important with user input
-$user_input = "0";  // This comes from a form as a string
-if ($user_input == false) {
-    echo "This executes because '0' converts to false";
-}
-if ($user_input === false) {
-    echo "This doesn't execute because '0' is not exactly false";
-}
-?>
-```
-
-### Logical Operators: Combining Conditions
-
-Logical operators let you combine multiple conditions to create complex decision-making logic:
-
-```php
-<?php
-$age = 25;
-$has_license = true;
-$has_insurance = true;
-$is_weekend = false;
-
-// AND operator (&&) - all conditions must be true
-if ($age >= 18 && $has_license && $has_insurance) {
-    echo "Can drive legally";
-}
-
-// OR operator (||) - at least one condition must be true
-if ($is_weekend || $age >= 65) {
-    echo "Eligible for discount";
-}
-
-// NOT operator (!) - reverses the condition
-if (!$is_weekend) {
-    echo "It's a weekday";
-}
-
-// Complex combinations
-if (($age >= 18 && $has_license) || ($age >= 16 && $has_license && $has_insurance)) {
-    echo "Can drive under certain conditions";
-}
-?>
-```
-
-Let's look at a practical example that combines multiple logical operators:
-
-```php
-<?php
-function canAccessSystem($username, $password, $account_status, $login_attempts) {
-    // Multiple conditions that must all be true
-    if (!empty($username) &&
-        !empty($password) &&
-        $account_status === "active" &&
-        $login_attempts < 5) {
-
-        return true;
-    }
-
-    return false;
-}
-
-// Test the function
-$result = canAccessSystem("john_doe", "password123", "active", 2);
-if ($result) {
-    echo "Access granted";
-} else {
-    echo "Access denied";
-}
-?>
-```
-
-### String Operators: Working with Text
-
-PHP provides special operators for working with text strings:
-
-```php
-<?php
-// Concatenation operator (.) - joins strings together
-$first_name = "John";
-$last_name = "Doe";
-$full_name = $first_name . " " . $last_name;  // "John Doe"
-
-// Concatenation assignment operator (.=) - appends to existing string
-$message = "Hello";
-$message .= " World";  // Same as: $message = $message . " World";
-echo $message;  // "Hello World"
-
-// Building complex strings
-$product_name = "Wireless Headphones";
-$price = 79.99;
-$tax_rate = 0.08;
-
-$tax_amount = $price * $tax_rate;
-$total = $price + $tax_amount;
-
-$invoice = "Product: " . $product_name . "\n";
-$invoice .= "Price: $" . $price . "\n";
-$invoice .= "Tax: $" . number_format($tax_amount, 2) . "\n";
-$invoice .= "Total: $" . number_format($total, 2);
-
-echo $invoice;
-?>
-```
-
-### Array Operators: Comparing and Combining Arrays
-
-PHP provides special operators for working with arrays:
-
-```php
-<?php
-// Union operator (+) - combines arrays
-$fruits = ["apple", "banana"];
-$vegetables = ["carrot", "broccoli"];
-$combined = $fruits + $vegetables;  // ["apple", "banana", "carrot", "broccoli"]
-
-// Array comparison operators
-$array1 = ["a" => 1, "b" => 2];
-$array2 = ["b" => 2, "a" => 1];
-
-// Equal (same key-value pairs, order doesn't matter)
-if ($array1 == $array2) {
-    echo "Arrays have same content";
-}
-
-// Identical (same key-value pairs in same order)
-if ($array1 === $array2) {
-    echo "Arrays are identical";  // This might not execute due to order
-}
-?>
-```
-
-### Practical Example: Building a Shopping Cart Calculator
-
-Let's combine multiple operators in a realistic example:
-
-```php
-<?php
-const TAX_RATE = 0.08;
-const FREE_SHIPPING_THRESHOLD = 50.00;
-const SHIPPING_COST = 5.99;
-
-function calculateTotal($items, $coupon_discount = 0) {
-    $subtotal = 0;
-
-    // Calculate subtotal using arithmetic operators
-    foreach ($items as $item) {
-        $subtotal += $item['price'] * $item['quantity'];
-    }
-
-    // Apply coupon discount
-    $discount_amount = $subtotal * ($coupon_discount / 100);
-    $subtotal -= $discount_amount;
-
-    // Calculate tax
-    $tax = $subtotal * TAX_RATE;
-
-    // Determine shipping cost using logical operators
-    $shipping = ($subtotal >= FREE_SHIPPING_THRESHOLD) ? 0 : SHIPPING_COST;
-
-    // Calculate final total
-    $total = $subtotal + $tax + $shipping;
-
-    // Return detailed breakdown
-    return [
-        'subtotal' => $subtotal,
-        'discount' => $discount_amount,
-        'tax' => $tax,
-        'shipping' => $shipping,
-        'total' => $total,
-        'qualifies_for_free_shipping' => $subtotal >= FREE_SHIPPING_THRESHOLD
-    ];
-}
-
-// Test the calculator
-$cart_items = [
-    ['name' => 'T-Shirt', 'price' => 19.99, 'quantity' => 2],
-    ['name' => 'Jeans', 'price' => 49.99, 'quantity' => 1],
-    ['name' => 'Sneakers', 'price' => 79.99, 'quantity' => 1]
-];
-
-$result = calculateTotal($cart_items, 10);  // 10% discount
-
-echo "Order Summary:\n";
-echo "Subtotal: $" . number_format($result['subtotal'], 2) . "\n";
-echo "Discount: $" . number_format($result['discount'], 2) . "\n";
-echo "Tax: $" . number_format($result['tax'], 2) . "\n";
-echo "Shipping: $" . number_format($result['shipping'], 2) . "\n";
-echo "Total: $" . number_format($result['total'], 2) . "\n";
-
-if ($result['qualifies_for_free_shipping']) {
-    echo "Congratulations! You qualify for free shipping!";
-}
-?>
-```
-
-This example demonstrates how operators work together in a real application. We use arithmetic operators for calculations, logical operators for decisions, comparison operators for conditions, and string operators for output formatting.
-
----
-
 ## Chapter 4: PHP Control Structures - Teaching Your Program to Make Decisions
 
 ### Understanding the Mind of Your Program
@@ -752,7 +60,8 @@ Life often presents more than two options. The `elseif` statement lets you handl
 
 ```php
 <?php
-function determineShippingCost($weight, $distance) {
+function determineShippingCost($weight, $distance)
+{
     if ($weight <= 1 && $distance <= 100) {
         return 5.99;
     } elseif ($weight <= 1 && $distance <= 500) {
@@ -783,7 +92,8 @@ Sometimes you need to make decisions within decisions. This is where nested `if`
 
 ```php
 <?php
-function processLogin($username, $password, $account_status) {
+function processLogin($username, $password, $account_status)
+{
     if (!empty($username) && !empty($password)) {
         // First check: do we have both username and password?
 
@@ -808,7 +118,8 @@ function processLogin($username, $password, $account_status) {
     }
 }
 
-function validatePassword($password) {
+function validatePassword($password)
+{
     // Simplified password validation
     return strlen($password) >= 8;
 }
@@ -861,7 +172,8 @@ When you need to compare a single variable against many possible values, the `sw
 
 ```php
 <?php
-function getSeasonInfo($month) {
+function getSeasonInfo($month)
+{
     switch ($month) {
         case 12:
         case 1:
@@ -893,7 +205,8 @@ $current_month = 7;
 echo getSeasonInfo($current_month);
 
 // You can also use switch with strings
-function processUserAction($action) {
+function processUserAction($action)
+{
     switch ($action) {
         case "login":
             echo "Processing login...";
@@ -932,7 +245,8 @@ Sometimes fall-through behavior is exactly what you want. Here's an example:
 
 ```php
 <?php
-function getAccessLevel($user_role) {
+function getAccessLevel($user_role)
+{
     $permissions = [];
 
     switch ($user_role) {
@@ -975,8 +289,10 @@ Let's combine everything we've learned about control structures in a practical e
 
 ```php
 <?php
-class SimpleCalculator {
-    public function calculate($number1, $operator, $number2) {
+class SimpleCalculator
+{
+    public function calculate($number1, $operator, $number2)
+    {
         // First, validate inputs
         if (!is_numeric($number1) || !is_numeric($number2)) {
             return "Error: Both operands must be numbers";
@@ -1017,7 +333,8 @@ class SimpleCalculator {
         }
     }
 
-    public function formatResult($result) {
+    public function formatResult($result)
+    {
         if (is_string($result)) {
             // It's an error message
             return $result;
@@ -1095,7 +412,8 @@ Let's look at more realistic uses of while loops:
 ```php
 <?php
 // Processing user input until they choose to quit
-function processUserCommands() {
+function processUserCommands()
+{
     $continue = true;
 
     while ($continue) {
@@ -1129,7 +447,8 @@ function processUserCommands() {
 }
 
 // Reading data until we reach the end
-function processDataFile($filename) {
+function processDataFile($filename)
+{
     $file = fopen($filename, 'r');
     $line_number = 1;
 
@@ -1153,7 +472,8 @@ Sometimes you need to execute code at least once, regardless of the condition. T
 ```php
 <?php
 // Password validation - must ask at least once
-function getValidPassword() {
+function getValidPassword()
+{
     do {
         $password = readline("Enter password (must be at least 8 characters): ");
 
@@ -1166,7 +486,8 @@ function getValidPassword() {
 }
 
 // Menu system - show menu at least once
-function displayMenu() {
+function displayMenu()
+{
     $choice = "";
 
     do {
@@ -1218,7 +539,8 @@ for ($i = 1; $i <= 5; $i++) {
 // }
 
 // Creating a multiplication table
-function createMultiplicationTable($number, $limit = 10) {
+function createMultiplicationTable($number, $limit = 10)
+{
     echo "Multiplication table for $number:\n";
 
     for ($i = 1; $i <= $limit; $i++) {
@@ -1292,8 +614,8 @@ foreach ($products as $product) {
     $total_value += $product_value;
 
     echo $product["name"] . ": $" . $product["price"] .
-         " (Stock: " . $product["stock"] .
-         ", Value: $" . number_format($product_value, 2) . ")\n";
+        " (Stock: " . $product["stock"] .
+        ", Value: $" . number_format($product_value, 2) . ")\n";
 }
 
 echo "Total inventory value: $" . number_format($total_value, 2) . "\n";
@@ -1357,7 +679,8 @@ Nested loops are powerful for processing multi-dimensional data or creating comp
 ```php
 <?php
 // Creating a simple calendar grid
-function createCalendarGrid($weeks, $days_per_week = 7) {
+function createCalendarGrid($weeks, $days_per_week = 7)
+{
     echo "Calendar Grid:\n";
 
     $day = 1;
@@ -1464,10 +787,12 @@ Let's combine all loop concepts in a practical example:
 
 ```php
 <?php
-class InventoryManager {
+class InventoryManager
+{
     private $products = [];
 
-    public function addProduct($name, $price, $quantity) {
+    public function addProduct($name, $price, $quantity)
+    {
         $this->products[] = [
             'name' => $name,
             'price' => $price,
@@ -1476,7 +801,8 @@ class InventoryManager {
         ];
     }
 
-    public function displayInventory() {
+    public function displayInventory()
+    {
         echo "Current Inventory:\n";
         echo str_repeat("-", 60) . "\n";
         echo sprintf("%-20s %-10s %-10s %-15s\n", "Product", "Price", "Quantity", "Total Value");
@@ -1484,7 +810,8 @@ class InventoryManager {
 
         $grand_total = 0;
         foreach ($this->products as $index => $product) {
-            echo sprintf("%-20s $%-9.2f %-10d $%-14.2f\n",
+            echo sprintf(
+                "%-20s $%-9.2f %-10d $%-14.2f\n",
                 $product['name'],
                 $product['price'],
                 $product['quantity'],
@@ -1497,7 +824,8 @@ class InventoryManager {
         echo sprintf("%-41s $%-14.2f\n", "Grand Total:", $grand_total);
     }
 
-    public function findLowStockItems($threshold = 5) {
+    public function findLowStockItems($threshold = 5)
+    {
         echo "\nLow Stock Alert (less than $threshold items):\n";
 
         $low_stock_found = false;
@@ -1513,7 +841,8 @@ class InventoryManager {
         }
     }
 
-    public function generateReorderReport() {
+    public function generateReorderReport()
+    {
         echo "\nReorder Recommendations:\n";
 
         foreach ($this->products as $product) {
@@ -1522,8 +851,8 @@ class InventoryManager {
             if ($product['quantity'] <= $reorder_point) {
                 $suggested_order = $reorder_point * 3;  // Order 3x the minimum
                 echo "- Reorder " . $product['name'] . ": Current stock " .
-                     $product['quantity'] . ", suggest ordering " .
-                     $suggested_order . " units\n";
+                    $product['quantity'] . ", suggest ordering " .
+                    $suggested_order . " units\n";
             }
         }
     }
@@ -1872,7 +1201,7 @@ echo "Removed: " . $first_fruit . "\n";
 
 // Remove elements by value (more complex)
 $fruits = ["apple", "banana", "orange", "banana", "grape"];
-$fruits = array_filter($fruits, function($fruit) {
+$fruits = array_filter($fruits, function ($fruit) {
     return $fruit !== "banana";  // Keep everything except banana
 });
 
@@ -2084,10 +1413,12 @@ echo "Students: " . implode(", ", $keys) . "\n";
 echo "Grades: " . implode(", ", $values) . "\n";
 
 // Array transformation functions
-$doubled = array_map(function($n) { return $n * 2; }, $numbers);
+$doubled = array_map(function ($n) {
+    return $n * 2;
+}, $numbers);
 echo "Doubled numbers: " . implode(", ", $doubled) . "\n";
 
-$high_grades = array_filter($grades, function($grade) {
+$high_grades = array_filter($grades, function ($grade) {
     return $grade >= 90;
 });
 echo "High grades: ";
